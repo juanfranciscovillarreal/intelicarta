@@ -13,7 +13,7 @@
 
         <v-card class="mx-auto" max-width="80" elevation="0" variant="text">
           <v-avatar :image="categoria.foto != null ? categoria.foto : empresaStore.empresa.logo" size="80" 
-          :border="isSelected ? 'xl' : 'xs'" @click="$emit('someEvent', toggle, categoria)" >
+          :border="isSelected ? 'xl' : 'md'" @click="$emit('someEvent', toggle, categoria)" >
           </v-avatar>
 
           <v-card-title class="d-flex justify-center text-subtitle-2">
