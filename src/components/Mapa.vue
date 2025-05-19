@@ -1,6 +1,7 @@
 <template>
     <!-- Map -->
-    <div id="map" style="height:25%;"></div>
+    <div id="map" style="height:400px; width: 100%; position: absolute;">
+    </div>
 </template>
 
 <script setup>

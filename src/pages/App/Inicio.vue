@@ -18,17 +18,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue';
 // Components
 import Logo from '@/components/Logo.vue';
 import Social from '@/components/Social.vue';
 // Composables
-import { useAplicacion } from '@/composables/aplicacion';
+import { useHelper } from '@/composables/helper';
 // Stores
 import { useEmpresaStore } from "@/stores/empresa";
 
-const router = useRouter()
 const logo = ref('')
 const links = [
   { text: 'Menú', icon: 'mdi-folder', path: 'Principal/Menu' },
@@ -39,19 +37,13 @@ const links = [
 ]
 
 // Composables
-const { nombreApp } = useAplicacion();
+const { goTo } = useHelper();
 // Stores
 const empresaStore = useEmpresaStore()
 
 onMounted(async () => {
   logo.value = empresaStore.empresa.logo;
 })
-
-function goTo(opcion) {
-  let empresa = empresaStore.empresa.nombre;
-  let root = `/${nombreApp.value}/${empresa}`;
-  router.push(`${root}/${opcion}`);
-}
 
 </script>
 

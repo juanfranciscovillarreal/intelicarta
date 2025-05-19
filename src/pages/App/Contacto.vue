@@ -11,7 +11,7 @@
         </template>
 
         <template v-slot:append>
-          <v-btn color="black" icon="mdi-map-search-outline" variant="text"></v-btn>
+          <v-btn color="black" icon="mdi-map-search-outline" variant="text" @click="verMapa"></v-btn>
         </template>
 
         <v-list-item-title>{{ empresaStore.empresa.direccion }}</v-list-item-title>
@@ -40,31 +40,57 @@
         <template v-slot:prepend>
           <v-icon :icon="contacto.Social.icono"></v-icon>
         </template>
-
-        <template v-slot:append>
-          <v-btn color="black" icon="mdi-link" variant="text"></v-btn>
-        </template>
-
         <v-list-item-title>{{ contacto.Social.nombre }}</v-list-item-title>
         <v-list-item-subtitle>{{ contacto.href }}</v-list-item-subtitle>
       </v-list-item>
     </v-list>
 
   </v-container>
+
+  <!-- Mapa -->
+  <div class="text-center pa-4">
+    <v-dialog v-model="dialog" transition="dialog-bottom-transition" height="400">
+      <v-card>
+        <!-- <v-toolbar>
+          <v-toolbar-title>Ubicación</v-toolbar-title>
+
+          <v-toolbar-items>
+            <v-btn icon="mdi-close" @click="dialog = false"></v-btn>
+          </v-toolbar-items>
+        </v-toolbar> -->
+
+        <Mapa></Mapa>
+      </v-card>
+    </v-dialog>
+  </div>
+
 </template>
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
+import { useRouter } from 'vue-router';
 // Stores
 import { useHorarioStore } from "@/stores/horario";
 import { useEmpresaStore } from "@/stores/empresa";
 import { useContactoStore } from "@/stores/contacto";
 // Components
 import Logo from '@/components/Logo.vue';
+import Mapa from '@/components/Mapa.vue';
+// Composables
+import { useAplicacion } from '@/composables/aplicacion';
 
 // Stores
 const contactoStore = useContactoStore()
 const empresaStore = useEmpresaStore()
 const horarioStore = useHorarioStore()
+// Composables
+const { nombreApp } = useAplicacion();
+
+const dialog = ref(false)
+const router = useRouter();
+
+function verMapa() {
+  dialog.value = true;
+}
 
 </script>
