@@ -45,9 +45,9 @@
 
         <template v-slot:append>
           <!-- <v-icon :icon="contacto.Social.icono" @click="clickUrl(contacto.href)"></v-icon> -->
-           <v-icon icon="mdi-content-copy" @click="copyText(contacto.href)"></v-icon> 
+          <v-icon icon="mdi-content-copy" @click="copyText(contacto.href)"></v-icon>
         </template>
-      
+
       </v-list-item>
     </v-list>
 
@@ -61,6 +61,13 @@
       </v-card>
     </v-dialog>
   </div>
+
+  <!-- Snackbar -->
+  <v-sheet class="d-flex flex-column">
+    <v-snackbar v-model="snackbar" min-width="100" color="primary">
+      {{ snackbarText }} copiado
+    </v-snackbar>
+  </v-sheet>
 
 </template>
 
@@ -85,7 +92,9 @@ const horarioStore = useHorarioStore()
 const { nombreApp } = useAplicacion();
 
 const dialog = ref(false)
-const router = useRouter();
+const router = useRouter()
+const snackbar = ref(false)
+const snackbarText = ref('')
 
 function verMapa() {
   dialog.value = true;
@@ -93,7 +102,8 @@ function verMapa() {
 
 function copyText(text) {
   navigator.clipboard.writeText(text);
-  alert("Copied the text: " + text);
-} 
+  snackbar.value = true;
+  snackbarText.value = text;
+}
 
 </script>
