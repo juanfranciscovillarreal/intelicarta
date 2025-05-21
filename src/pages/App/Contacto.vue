@@ -42,6 +42,12 @@
         </template>
         <v-list-item-title>{{ contacto.Social.nombre }}</v-list-item-title>
         <v-list-item-subtitle>{{ contacto.href }}</v-list-item-subtitle>
+
+        <template v-slot:append>
+          <!-- <v-icon :icon="contacto.Social.icono" @click="clickUrl(contacto.href)"></v-icon> -->
+           <v-icon icon="mdi-content-copy" @click="copyText(contacto.href)"></v-icon> 
+        </template>
+      
       </v-list-item>
     </v-list>
 
@@ -51,14 +57,6 @@
   <div class="text-center pa-4">
     <v-dialog v-model="dialog" transition="dialog-bottom-transition" height="400">
       <v-card>
-        <!-- <v-toolbar>
-          <v-toolbar-title>Ubicación</v-toolbar-title>
-
-          <v-toolbar-items>
-            <v-btn icon="mdi-close" @click="dialog = false"></v-btn>
-          </v-toolbar-items>
-        </v-toolbar> -->
-
         <Mapa></Mapa>
       </v-card>
     </v-dialog>
@@ -92,5 +90,10 @@ const router = useRouter();
 function verMapa() {
   dialog.value = true;
 }
+
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+  alert("Copied the text: " + text);
+} 
 
 </script>
