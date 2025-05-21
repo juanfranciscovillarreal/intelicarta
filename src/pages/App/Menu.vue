@@ -3,9 +3,27 @@
     <!-- Categorias -->
     <Categorias @some-event="filtrarPorCategoria"></Categorias>
 
+    <v-card class="mx-auto" max-width="450">
+        <v-list lines="three" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id">
+            <v-list-item v-for="item in categoria.Item" :key="item.id">
+                <v-list-item-title>{{ item.nombre }}</v-list-item-title>
+                <v-list-item-subtitle>{{ item.descripcion }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
+
+                <template v-slot:append>
+                    <v-avatar rounded="0" size="80">
+                        <v-img :src="item.foto" cover></v-img>
+                    </v-avatar>
+                    <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
+                    </v-checkbox-btn>
+                </template>
+            </v-list-item>
+        </v-list>
+    </v-card>
+
     <!-- Menú -->
-    <v-expansion-panels v-model="menuStore.expandir" multiple color="blue-grey-lighten-3" elevation="0" flat rounded="0"
-        :static="true" :tile="true">
+    <v-expansion-panels v-if="categoriasStore.seleccionada.id == 0" v-model="menuStore.expandir" multiple
+        color="blue-grey-lighten-3" elevation="0" flat rounded="0" :static="true" :tile="true">
         <v-expansion-panel v-for="(categoria, index) in menuStore.menuFiltrado" :key="index" :title="categoria.nombre">
             <v-expansion-panel-text>
                 <v-list>
@@ -89,6 +107,7 @@ import { useFiltros } from '@/composables/filtros'
 // Stores
 import { useMenuStore } from "@/stores/menu";
 import { useCategoriasStore } from "@/stores/categorias";
+import { useEmpresaStore } from "@/stores/empresa";
 
 const tabs = ref(null)
 const categoriaSeleccionada = ref(0)
@@ -102,6 +121,7 @@ const { toPesos } = useFiltros();
 // Stores
 const categoriasStore = useCategoriasStore()
 const menuStore = useMenuStore()
+const empresaStore = useEmpresaStore()
 
 onMounted(() => {
     menuStore.menuFiltrado = menuStore.menuCompleto;
@@ -122,6 +142,8 @@ function filtrarPorCategoria(toggle, categoria) {
         })
     }
     categoriasStore.seleccionada = categoria;
+    // console.log(JSON.stringify(categoriasStore.seleccionada))
+    console.log(JSON.stringify(menuStore.menuFiltrado))
 }
 
 function favoritoChange(item) {
