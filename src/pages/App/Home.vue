@@ -55,7 +55,7 @@
       </template>
 
       <v-list density="compact">
-        <v-list-item v-for="(item, i) in items" :key="i" :value="item" color="primary" @click="mostrarMenu()">
+        <v-list-item v-for="(item, i) in items" :key="i" :value="item" color="primary" @click="mostrarMenu(item.id_tipo)">
           <template v-slot:prepend>
             <v-icon :icon="item.icon"></v-icon>
           </template>
@@ -155,6 +155,7 @@ import { useAplicacion } from '@/composables/aplicacion';
 import { useContacto } from '@/composables/contacto';
 import { useHorario } from '@/composables/horario';
 import { useGaleria } from '@/composables/galeria';
+
 // Stores
 import { useCategoriasStore } from "@/stores/categorias";
 import { useItemsStore } from "@/stores/items";
@@ -183,8 +184,9 @@ const empresa = ref('')
 const links = ref([])
 const varios = ref([])
 const items = ref([
-  { text: 'Lista', icon:'mdi-list-box-outline' },
-  { text: 'Recuadro', icon:'mdi-view-grid-outline' },
+  { id_tipo: 0, text: 'Texto', icon:'mdi-text-long' },
+  { id_tipo: 1, text: 'Lista', icon:'mdi-list-box-outline' },
+  { id_tipo: 2, text: 'Fotos', icon:'mdi-view-grid-outline' },
 ])
 
 // Stores
@@ -196,7 +198,7 @@ const contactoStore = useContactoStore()
 const horarioStore = useHorarioStore()
 const galeriaStore = useGaleriaStore()
 
-onMounted(async () => {
+onMounted(async () => {  
   empresa.value = route.params.empresa;
   await getEmpresaPorNombreData();
   await getContactoData();
@@ -345,7 +347,7 @@ function generarQR() {
   verQR.value = true;
 }
 
-function mostrarMenu(){
-  console.log('Mostrar menú')
+function mostrarMenu(id_tipo){  
+  menuStore.id_tipo = id_tipo;
 }
 </script>

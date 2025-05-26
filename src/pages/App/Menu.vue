@@ -3,26 +3,8 @@
     <!-- Categorias -->
     <Categorias @some-event="filtrarPorCategoria"></Categorias>
 
-    <v-card class="mx-auto" max-width="450">
-        <v-list lines="three" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id">
-            <v-list-item v-for="item in categoria.Item" :key="item.id">
-                <v-list-item-title>{{ item.nombre }}</v-list-item-title>
-                <v-list-item-subtitle>{{ item.descripcion }}</v-list-item-subtitle>
-                <v-list-item-subtitle class="font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
-
-                <template v-slot:append>
-                    <v-avatar rounded="0" size="80">
-                        <v-img :src="item.foto" cover></v-img>
-                    </v-avatar>
-                    <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
-                    </v-checkbox-btn>
-                </template>
-            </v-list-item>
-        </v-list>
-    </v-card>
-
-    <!-- Menú -->
-    <v-expansion-panels v-if="categoriasStore.seleccionada.id == 0" v-model="menuStore.expandir" multiple
+    <!-- Texto -->
+    <v-expansion-panels v-if="menuStore.id_tipo == 0" v-model="menuStore.expandir" multiple
         color="blue-grey-lighten-3" elevation="0" flat rounded="0" :static="true" :tile="true">
         <v-expansion-panel v-for="(categoria, index) in menuStore.menuFiltrado" :key="index" :title="categoria.nombre">
             <v-expansion-panel-text>
@@ -57,6 +39,51 @@
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>
+
+    <!-- Lista -->
+    <v-card v-if="menuStore.id_tipo == 1" class="mx-auto" max-width="450">
+        <v-list lines="three" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id">
+            <v-list-item v-for="item in categoria.Item" :key="item.id">
+                <v-list-item-title>{{ item.nombre }}</v-list-item-title>
+                <v-list-item-subtitle>{{ item.descripcion }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
+
+                <template v-slot:append>
+                    <v-avatar rounded="0" size="80">
+                        <v-img :src="item.foto" cover></v-img>
+                    </v-avatar>
+                    <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
+                    </v-checkbox-btn>
+                </template>
+            </v-list-item>
+        </v-list>
+    </v-card>
+
+    <!-- Recuadro -->
+    <v-card v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id" 
+        class="mx-auto" max-width="450">
+        <v-row>
+            <v-col v-for="item in categoria.Item" :key="item.id" class="d-flex child-flex" cols="6">
+                <v-card class="mx-auto" max-width="150" max-height="200">
+                    <v-img height="80px" :src="item.foto"></v-img>
+                    <v-card-title>
+                        {{ item.nombre }}
+                    </v-card-title>
+                    <div class="ml-4">
+                        {{ item.descripcion }}
+                    </div>
+
+                    <div class="ml-4">
+                        {{ toPesos(item.precio) }}
+                    </div>
+                    <v-card-actions>
+                        <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
+                        </v-checkbox-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-card>
 
     <!-- Detalle -->
     <v-bottom-sheet v-model="dialog">
@@ -130,7 +157,6 @@ onMounted(() => {
 })
 
 function filtrarPorCategoria(toggle, categoria) {
-    // console.log(`Categoría: ${categoriasStore.seleccionada}`);
     if (toggle) {
         toggle();
     }
@@ -142,8 +168,6 @@ function filtrarPorCategoria(toggle, categoria) {
         })
     }
     categoriasStore.seleccionada = categoria;
-    // console.log(JSON.stringify(categoriasStore.seleccionada))
-    console.log(JSON.stringify(menuStore.menuFiltrado))
 }
 
 function favoritoChange(item) {

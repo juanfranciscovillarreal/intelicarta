@@ -5,6 +5,7 @@ export const useMenuStore = defineStore('menu', () => {
   // Estados
   const count = ref(0)
   const total = ref(0)
+  const id_tipo = ref(0)
 
   const menuFiltrado = ref([])
   const menuCompleto = ref([])
@@ -47,6 +48,7 @@ export const useMenuStore = defineStore('menu', () => {
   return {
     count,
     total,
+    id_tipo,
     menuFiltrado,
     menuCompleto,
     menu,
