@@ -4,8 +4,8 @@
     <Categorias @some-event="filtrarPorCategoria"></Categorias>
 
     <!-- Texto -->
-    <v-expansion-panels v-if="menuStore.id_tipo == 0" v-model="menuStore.expandir" multiple
-        color="blue-grey-lighten-3" elevation="0" flat rounded="0" :static="true" :tile="true">
+    <v-expansion-panels v-if="menuStore.id_tipo == 0" v-model="menuStore.expandir" multiple color="blue-grey-lighten-3"
+        elevation="0" flat rounded="0" :static="true" :tile="true">
         <v-expansion-panel v-for="(categoria, index) in menuStore.menuFiltrado" :key="index" :title="categoria.nombre">
             <v-expansion-panel-text>
                 <v-list>
@@ -60,20 +60,22 @@
     </v-card>
 
     <!-- Recuadro -->
-    <v-card v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id" 
-        class="mx-auto" max-width="450">
+    <v-card v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id"
+        class="mx-auto" elevation="0" rounded="0">
         <v-row>
-            <v-col v-for="item in categoria.Item" :key="item.id" class="d-flex child-flex" cols="6">
-                <v-card class="mx-auto" max-width="150" max-height="200">
+            <v-col md="6" v-for="item in categoria.Item" :key="item.id" class="d-flex child-flex">
+                <v-card class="mx-auto" elevation="0" rounded="0">
+
                     <v-img height="80px" :src="item.foto"></v-img>
-                    <v-card-title>
+
+                    <div class="ml-2">
                         {{ item.nombre }}
-                    </v-card-title>
-                    <div class="ml-4">
+                    </div>
+                    <div class="ml-2">
                         {{ item.descripcion }}
                     </div>
 
-                    <div class="ml-4">
+                    <div class="ml-2">
                         {{ toPesos(item.precio) }}
                     </div>
                     <v-card-actions>
