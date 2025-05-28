@@ -1,4 +1,5 @@
 <template>
+    <ToolBar titulo="Acerca..." ruta="Inicio" :esApp="true"></ToolBar>
     <Logo></Logo>
     <!-- Categorias -->
     <Categorias @some-event="filtrarPorCategoria"></Categorias>
@@ -131,6 +132,7 @@ import { ref, watch, onMounted, computed } from 'vue'
 // Components
 import Categorias from '@/components/Categorias.vue';
 import Logo from '@/components/Logo.vue';
+import ToolBar from '@/components/ToolBar.vue';
 // Composables
 import { useFiltros } from '@/composables/filtros'
 // Stores

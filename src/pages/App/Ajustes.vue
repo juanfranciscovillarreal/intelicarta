@@ -1,4 +1,5 @@
 <template>
+    <ToolBar titulo="Acerca..." ruta="Inicio" :esApp="true"></ToolBar>
     <v-list v-model:selected="settingsSelection" lines="three" select-strategy="leaf">
         <v-list-subheader>General</v-list-subheader>
 
@@ -71,6 +72,8 @@
 import { useAjustesStore } from "@/stores/ajustes";
 import { ref, watch, onMounted } from 'vue'
 import { useLocale, useTheme } from 'vuetify'
+// Components
+import ToolBar from '@/components/ToolBar.vue';
 
 const { current } = useLocale()
 const theme = useTheme()

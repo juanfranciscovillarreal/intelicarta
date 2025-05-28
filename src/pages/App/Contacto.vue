@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <ToolBar titulo="Acerca..." ruta="Inicio" :esApp="true"></ToolBar>
     <Logo></Logo>
 
     <!-- Dirección -->
@@ -81,6 +82,7 @@ import { useContactoStore } from "@/stores/contacto";
 // Components
 import Logo from '@/components/Logo.vue';
 import Mapa from '@/components/Mapa.vue';
+import ToolBar from '@/components/ToolBar.vue';
 // Composables
 import { useAplicacion } from '@/composables/aplicacion';
 

@@ -1,3 +1,9 @@
 <template>
-    <h1>Wi Fi QR</h1>
+    <ToolBar titulo="Wi Fi" ruta="Inicio" :esApp="true"></ToolBar>
+    <p>Wi Fi</p>
 </template>
+
+<script setup>
+// Components
+import ToolBar from '@/components/ToolBar.vue';
+</script>

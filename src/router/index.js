@@ -110,8 +110,6 @@ const routes = [
     name: 'Administracion',
     component: Administracion,
     meta: { requiresAuth: true },
-    children: [
-    ]
   },
   {
     path: '/categoria',
@@ -141,7 +139,7 @@ const routes = [
     path: '/sugerenciaabm',
     component: SugerenciaAbm,
   },
-  
+
   {
     path: '/acerca',
     component: Acerca,
@@ -154,30 +152,6 @@ const routes = [
       {
         path: `${rootMenu}/Inicio`,
         component: Inicio,
-      },
-      {
-        path: `${rootMenu}/WiFi`,
-        component: WiFi,
-      },
-      {
-        path: `${rootMenu}/Contacto`,
-        component: Contacto,
-      },
-      {
-        path: `${rootMenu}/Galeria`,
-        component: Galeria,
-      },
-      {
-        path: `${rootMenu}/Ajustes`,
-        component: Ajustes,
-      },
-      {
-        path: `${rootMenu}/Acerca`,
-        component: AcercaApp,
-      },
-      {
-        path: `${rootMenu}/Reserva`,
-        component: Reserva,
       },
       {
         path: `${rootMenu}/Principal`,
@@ -199,6 +173,30 @@ const routes = [
         ],
       },
     ],
+  },
+  {
+    path: `${rootMenu}/WiFi`,
+    component: WiFi,
+  },
+  {
+    path: `${rootMenu}/Contacto`,
+    component: Contacto,
+  },
+  {
+    path: `${rootMenu}/Galeria`,
+    component: Galeria,
+  },
+  {
+    path: `${rootMenu}/Ajustes`,
+    component: Ajustes,
+  },
+  {
+    path: `${rootMenu}/Acerca`,
+    component: AcercaApp,
+  },
+  {
+    path: `${rootMenu}/Reserva`,
+    component: Reserva,
   },
 ]
 
