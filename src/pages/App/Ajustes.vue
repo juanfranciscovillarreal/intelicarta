@@ -1,5 +1,5 @@
 <template>
-    <ToolBar titulo="Acerca..." ruta="Inicio" :esApp="true"></ToolBar>
+    <ToolBar titulo="Ajustes" ruta="Inicio" :esApp="true"></ToolBar>
     <v-list v-model:selected="settingsSelection" lines="three" select-strategy="leaf">
         <v-list-subheader>General</v-list-subheader>
 

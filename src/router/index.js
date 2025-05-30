@@ -153,24 +153,24 @@ const routes = [
         path: `${rootMenu}/Inicio`,
         component: Inicio,
       },
+    ],
+  },
+  {
+    path: `${rootMenu}/Principal`,
+    component: Principal,
+    redirect: `${rootMenu}/Principal/Menu`,
+    children: [
       {
-        path: `${rootMenu}/Principal`,
-        component: Principal,
-        redirect: `${rootMenu}/Principal/Menu`,
-        children: [
-          {
-            path: `${rootMenu}/Principal/Menu`,
-            component: Menu,
-          },
-          {
-            path: `${rootMenu}/Principal/Pedido`,
-            component: Pedido,
-          },
-          {
-            path: `${rootMenu}/Principal/LeerQR`,
-            component: LeerQR,
-          },
-        ],
+        path: `${rootMenu}/Principal/Menu`,
+        component: Menu,
+      },
+      {
+        path: `${rootMenu}/Principal/Pedido`,
+        component: Pedido,
+      },
+      {
+        path: `${rootMenu}/Principal/LeerQR`,
+        component: LeerQR,
       },
     ],
   },

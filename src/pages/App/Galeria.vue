@@ -1,5 +1,5 @@
 <template>
-    <ToolBar titulo="Acerca..." ruta="Inicio" :esApp="true"></ToolBar>
+    <ToolBar titulo="Galería" ruta="Inicio" :esApp="true"></ToolBar>
     <!-- Fotos -->
     <Galeria :esAbm="false"></Galeria>
 </template>

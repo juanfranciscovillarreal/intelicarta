@@ -1,6 +1,6 @@
 <template>
     <router-view />
-    <BottomNav></BottomNav>
+    <!-- <BottomNav></BottomNav> -->
 </template>
 
 <script setup>

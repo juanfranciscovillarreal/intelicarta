@@ -1,6 +1,5 @@
 <template>
-  <v-container>
-    <ToolBar titulo="Acerca..." ruta="Inicio" :esApp="true"></ToolBar>
+    <ToolBar titulo="Contacto" ruta="Inicio" :esApp="true"></ToolBar>
     <Logo></Logo>
 
     <!-- Dirección -->
@@ -51,8 +50,6 @@
 
       </v-list-item>
     </v-list>
-
-  </v-container>
 
   <!-- Mapa -->
   <div class="text-center pa-4">

@@ -1,4 +1,6 @@
 <template>
+  <ToolBar titulo="Pedido" ruta="Principal/Menu" :esApp="true"></ToolBar>
+
   <v-table density="compact">
     <thead style="background-color: lightblue;">
       <tr>
@@ -39,19 +41,9 @@
         </td>
       </tr>
     </tbody>
-    <!-- <tfoot style="background-color: lightblue; font-weight: bold;">
-      <tr class="xt-subtitle-1">
-        <td v-text="'Total'"></td>
-        <td style="padding: 0px;"></td>
-        <td style="padding: 0px;"></td>
-        <td style="padding: 0px;"></td>
-        <td v-text="toPesos(menuStore.total)" style="text-align: end; padding: 0px;"></td>
-        <td></td>
-      </tr>
-    </tfoot> -->
   </v-table>
 
-  <v-toolbar density="compact" color="primary" style="position: fixed; bottom: 67px;" class="pr-4">
+  <v-toolbar density="compact" color="primary" style="position: fixed; bottom: 0px;" class="pr-4">
     <v-toolbar-title>Total</v-toolbar-title>
 
     <v-spacer></v-spacer>
@@ -63,7 +55,9 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+// Components
+import ToolBar from '@/components/ToolBar.vue';
 // Composables
 import { useFiltros } from '@/composables/filtros'
 // Stores
@@ -113,5 +107,3 @@ function deleteItem(item) {
 }
 
 </script>
-
-<style scoped></style>

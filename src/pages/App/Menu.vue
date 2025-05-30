@@ -1,5 +1,5 @@
 <template>
-    <ToolBar titulo="Acerca..." ruta="Inicio" :esApp="true"></ToolBar>
+    <ToolBar titulo="Menú" ruta="Inicio" :esApp="true"></ToolBar>
     <Logo></Logo>
     <!-- Categorias -->
     <Categorias @some-event="filtrarPorCategoria"></Categorias>

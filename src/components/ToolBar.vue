@@ -7,6 +7,10 @@
         <v-toolbar-title>{{ props.titulo }}</v-toolbar-title>
 
         <v-spacer></v-spacer>
+
+       <MenuOpciones></MenuOpciones>
+       <PedidoOpciones></PedidoOpciones>
+
         <v-btn v-if="props.icono != null" :icon="props.icono" @click="$emit('evento_click')"></v-btn>
 
         <template v-slot:extension v-if="nuevo">
@@ -18,12 +22,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+// Components
+import MenuOpciones from '@/components/MenuOpciones'
+import PedidoOpciones from '@/components/PedidoOpciones'
 // Composables
 import { useHelper } from '@/composables/helper';
-
-const prueba = ref()
 
 const router = useRouter()
 const route = useRoute()
@@ -45,4 +49,5 @@ function navegar() {
         router.push(props.ruta);
     }
 }
+
 </script>

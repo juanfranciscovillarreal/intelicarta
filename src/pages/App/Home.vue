@@ -23,7 +23,7 @@
     <!-- <v-toolbar-title>{{ getTitulo }}</v-toolbar-title> -->
 
     <!-- Tema -->
-    <BtnTheme v-if="route.path.includes('/Inicio')" />
+    <BtnTheme />
 
     <!-- Espacio -->
     <!-- <v-spacer v-if="route.path == `/${empresa}/Menu`"></v-spacer> -->
@@ -40,31 +40,6 @@
 
     <!-- Buscar -->
     <Buscar />
-
-    <!-- Expandir / Contraer -->
-    <v-btn v-if="route.path.includes('/Menu')" icon>
-      <v-icon @click="menuStore.expandirContraerMenu()">
-        {{ menuStore.expandir.length > 0 ? 'mdi-minus-box-multiple-outline' : 'mdi-expand-all' }}
-      </v-icon>
-    </v-btn>
-
-    <!-- Menú Vertical -->
-    <v-menu v-if="route.path.includes('/Menu')">
-      <template v-slot:activator="{ props }">
-        <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
-      </template>
-
-      <v-list density="compact">
-        <v-list-item v-for="(item, i) in items" :key="i" :value="item" color="primary" @click="mostrarMenu(item.id_tipo)">
-          <template v-slot:prepend>
-            <v-icon :icon="item.icon"></v-icon>
-          </template>
-
-          <v-list-item-title v-text="item.text"></v-list-item-title>
-        </v-list-item>
-      </v-list>
-
-    </v-menu>
 
   </v-app-bar>
 
@@ -111,7 +86,7 @@
     <router-view />
   </v-main>
 
-  <div class="text-center pa-4">
+  <!-- <div class="text-center pa-4">
     <v-dialog v-model="verQR" width="auto" color="error">
       <v-card max-width="400" class="text-center">
 
@@ -123,8 +98,6 @@
           Pedido vacío
         </v-card-title>
 
-        <!--vue-qrcode v-if="menuStore.pedido.length > 0" :value="qrValue" :width="300" type="image/png"
-          :color="{ dark: '#000000ff' }" :margin="6" :scale="4" /-->
         <v-card-text v-else="menuStore.pedido.length = 0">
           Seleccione algún item del menú
         </v-card-text>
@@ -133,7 +106,7 @@
         </template>
       </v-card>
     </v-dialog>
-  </div>
+  </div> -->
 
 </template>
 
@@ -177,17 +150,12 @@ const { getFotos } = useGaleria();
 
 const router = useRouter()
 const route = useRoute()
-const verQR = ref(false)
-const qrValue = ref('')
+// const verQR = ref(false)
+// const qrValue = ref('')
 const drawer = ref(false)
 const empresa = ref('')
 const links = ref([])
 const varios = ref([])
-const items = ref([
-  { id_tipo: 0, text: 'Texto', icon:'mdi-text-long' },
-  { id_tipo: 1, text: 'Lista', icon:'mdi-list-box-outline' },
-  { id_tipo: 2, text: 'Fotos', icon:'mdi-view-grid-outline' },
-])
 
 // Stores
 const categoriasStore = useCategoriasStore()
@@ -342,12 +310,8 @@ const getTitulo = computed(() => {
   return titulo;
 })
 
-function generarQR() {
-  qrValue.value = JSON.stringify(menuStore.pedido.map(({ id, cantidad }) => ({ id, cantidad })));
-  verQR.value = true;
-}
-
-function mostrarMenu(id_tipo){  
-  menuStore.id_tipo = id_tipo;
-}
+// function generarQR() {
+//   qrValue.value = JSON.stringify(menuStore.pedido.map(({ id, cantidad }) => ({ id, cantidad })));
+//   verQR.value = true;
+// }
 </script>
