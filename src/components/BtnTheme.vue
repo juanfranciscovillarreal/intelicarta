@@ -24,5 +24,9 @@ onMounted(async () => {
 watch(modo, (newValue, oldValue) => {
     ajustesStore.modo = newValue;
     theme.global.name.value = newValue;
+    theme.themes.value.light.colors.primary = '#4caf50'
+    theme.themes.value.light.colors.background = '#FFFFFF'
+    theme.themes.value.dark.colors.primary = '#000000'
+    this.theme.global.name.value = "darkTheme"
 })
 </script>
