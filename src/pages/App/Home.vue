@@ -3,43 +3,11 @@
     <!-- Botón Menú Principal -->
     <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
-    <!-- <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"
-      v-if="route.path.includes('/Inicio') || route.path == `/${empresa}`">
-    </v-app-bar-nav-icon> -->
-
-    <!-- <v-btn v-if="route.path != `/${empresa}/Inicio` && route.path != `/${empresa}`" icon>
-      <v-icon @click="router.push(`/${empresa}/Inicio`)">mdi-arrow-left</v-icon>
-    </v-btn> -->
-
-    <!-- Volver -->
-    <!-- <v-btn v-if="route.path == `/${empresa}/LeerQR`" icon>
-      <v-icon @click="router.push(`/${empresa}/Pedido`)">
-        mdi-arrow-left
-      </v-icon>
-    </v-btn> -->
-
     <!-- Título App -->
     <v-toolbar-title>{{ empresa }}</v-toolbar-title>
-    <!-- <v-toolbar-title>{{ getTitulo }}</v-toolbar-title> -->
 
     <!-- Tema -->
     <BtnTheme />
-
-    <!-- Espacio -->
-    <!-- <v-spacer v-if="route.path == `/${empresa}/Menu`"></v-spacer> -->
-
-    <!-- Generar QR -->
-    <!-- <v-btn v-if="route.path == `/${empresa}/Pedido`" icon>
-      <v-icon @click="generarQR()">mdi-share</v-icon>
-    </v-btn> -->
-
-    <!-- Leer QR -->
-    <!-- <v-btn v-if="route.path == `/${empresa}/Pedido`" icon>
-      <v-icon @click="router.push('/LeerQR')">mdi-qrcode-scan</v-icon>
-    </v-btn> -->
-
-    <!-- Buscar -->
-    <Buscar />
 
   </v-app-bar>
 
@@ -85,39 +53,14 @@
   <v-main>
     <router-view />
   </v-main>
-
-  <!-- <div class="text-center pa-4">
-    <v-dialog v-model="verQR" width="auto" color="error">
-      <v-card max-width="400" class="text-center">
-
-        <v-card-title v-if="menuStore.pedido.length > 0" class="bg-green-lighten-2">
-          Comparta su pedido
-        </v-card-title>
-
-        <v-card-title v-else class="bg-red-lighten-2">
-          Pedido vacío
-        </v-card-title>
-
-        <v-card-text v-else="menuStore.pedido.length = 0">
-          Seleccione algún item del menú
-        </v-card-text>
-        <template v-slot:actions>
-          <v-btn class="ms-auto" text="Cerrar" @click="verQR = false"></v-btn>
-        </template>
-      </v-card>
-    </v-dialog>
-  </div> -->
-
 </template>
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-//import VueQrcode from 'vue-qrcode';
 // Components
 import BtnTheme from '@/components/BtnTheme.vue';
-import Buscar from '@/components/Buscar.vue';
 // Composables
 import { useErrorHandler } from '@/composables/errorHandler'
 import { useEmpresa } from '@/composables/empresa';
@@ -150,8 +93,6 @@ const { getFotos } = useGaleria();
 
 const router = useRouter()
 const route = useRoute()
-// const verQR = ref(false)
-// const qrValue = ref('')
 const drawer = ref(false)
 const empresa = ref('')
 const links = ref([])
@@ -166,7 +107,7 @@ const contactoStore = useContactoStore()
 const horarioStore = useHorarioStore()
 const galeriaStore = useGaleriaStore()
 
-onMounted(async () => {  
+onMounted(async () => {
   empresa.value = route.params.empresa;
   await getEmpresaPorNombreData();
   await getContactoData();
@@ -213,8 +154,6 @@ async function getEmpresaPorNombreData() {
 }
 
 async function getCategoriasData() {
-  // TODO: ver si se puede usar una vista parametrizada o procedimiento almacenado
-  //       en lugar de consultar directamente la tabla
   await getCategorias(empresaStore.empresa.id)
     .then((data) => {
       data.unshift({
@@ -265,53 +204,4 @@ const getImage = computed(() => {
   return empresaStore.empresa.logo != '' ? empresaStore.empresa.logo : '@/assets/Empresa.png';
 })
 
-const getTitulo = computed(() => {
-  //console.log(`Ruta: ${route.path}`);
-  var view = route.path.replace('/' + route.params.empresa + '/', '');
-  var titulo = '';
-
-  switch (view) {
-    case `/${route.params.empresa}`:
-      titulo = route.params.empresa
-      break;
-
-    case 'Inicio':
-      titulo = empresa.value;
-      break;
-
-    case 'Menu':
-      titulo = 'Menú';
-      break;
-
-    case 'Contacto':
-      titulo = 'Contacto';
-      break;
-
-    case 'Ajustes':
-      titulo = 'Ajustes';
-      break;
-
-    case 'WiFi':
-      titulo = 'Wi-Fi';
-      break;
-
-    case 'Acerca':
-      titulo = 'Acerca de Intelicarta';
-      break;
-
-    case 'Reserva':
-      titulo = 'Reservas';
-      break;
-
-    default:
-      titulo = 'Menú';
-      break;
-  }
-  return titulo;
-})
-
-// function generarQR() {
-//   qrValue.value = JSON.stringify(menuStore.pedido.map(({ id, cantidad }) => ({ id, cantidad })));
-//   verQR.value = true;
-// }
 </script>

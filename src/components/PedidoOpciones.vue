@@ -39,6 +39,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+//import VueQrcode from 'vue-qrcode';
 // Composables
 import { useHelper } from '@/composables/helper';
 // Stores

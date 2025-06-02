@@ -8,8 +8,9 @@
 
         <v-spacer></v-spacer>
 
-       <MenuOpciones></MenuOpciones>
-       <PedidoOpciones></PedidoOpciones>
+        <Buscar />
+        <MenuOpciones />
+        <PedidoOpciones />
 
         <v-btn v-if="props.icono != null" :icon="props.icono" @click="$emit('evento_click')"></v-btn>
 
@@ -26,6 +27,7 @@ import { useRouter, useRoute } from 'vue-router'
 // Components
 import MenuOpciones from '@/components/MenuOpciones'
 import PedidoOpciones from '@/components/PedidoOpciones'
+import Buscar from '@/components/Buscar.vue';
 // Composables
 import { useHelper } from '@/composables/helper';
 
