@@ -6,6 +6,7 @@ export const useCategoriasStore = defineStore('categorias', () => {
     const categorias = ref([])
     const seleccionada = ref(0)
     const index = ref(0)
+    const soloTexto = ref(true)
 
     // Getters
 
@@ -14,6 +15,7 @@ export const useCategoriasStore = defineStore('categorias', () => {
     return {
         categorias,
         seleccionada,
-        index
+        index,
+        soloTexto
     }
 })

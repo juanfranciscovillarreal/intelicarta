@@ -11,6 +11,7 @@
         <Buscar />
         <MenuOpciones />
         <PedidoOpciones />
+        <DrawerRight />
 
         <v-btn v-if="props.icono != null" :icon="props.icono" @click="$emit('evento_click')"></v-btn>
 
@@ -28,6 +29,7 @@ import { useRouter, useRoute } from 'vue-router'
 import MenuOpciones from '@/components/MenuOpciones'
 import PedidoOpciones from '@/components/PedidoOpciones'
 import Buscar from '@/components/Buscar.vue';
+import DrawerRight from '@/components/DrawerRight.vue';
 // Composables
 import { useHelper } from '@/composables/helper';
 

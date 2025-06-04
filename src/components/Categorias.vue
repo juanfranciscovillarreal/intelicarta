@@ -6,7 +6,12 @@
 
       <v-slide-group-item v-for="categoria in categoriasStore.categorias" v-slot="{ isSelected = true, toggle }">
 
-        <v-card class="mx-auto" max-width="80" elevation="0" variant="text">
+        <v-btn v-if="categoriasStore.soloTexto" :color="isSelected ? 'primary' : undefined" class="ma-2" rounded
+          @click="filtrarPorCategoria(toggle, categoria)">
+          {{ categoria.nombre }}
+        </v-btn>
+
+        <v-card v-if="categoriasStore.soloTexto == false" class="mx-auto" max-width="80" elevation="0" variant="text">
           <v-avatar :image="categoria.foto != null ? categoria.foto : empresaStore.empresa.logo" size="80"
             :border="isSelected ? 'xl' : 'md'" @click="filtrarPorCategoria(toggle, categoria)">
           </v-avatar>
@@ -23,6 +28,7 @@
 </template>
 
 <script setup>
+import { ref, watch, onMounted, computed } from 'vue'
 // Stores
 import { useCategoriasStore } from "@/stores/categorias";
 import { useEmpresaStore } from "@/stores/empresa";
