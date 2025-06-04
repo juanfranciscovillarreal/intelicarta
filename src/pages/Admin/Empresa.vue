@@ -147,7 +147,7 @@ async function onSubmit() {
 
   try {
     let empresa = {
-      id: user.id,
+      id: empresaStore.empresa.id,
       nombre: empresaStore.empresa.nombre,
       descripcion: empresaStore.empresa.descripcion,
       direccion: empresaStore.empresa.direccion,

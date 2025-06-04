@@ -1,11 +1,11 @@
 <template>
     <ToolBar titulo="Menú" ruta="Inicio" :esApp="true"></ToolBar>
-    <Logo></Logo>
+    <!-- <Logo></Logo> -->
     <!-- Categorias -->
     <Categorias></Categorias>
 
     <!-- Texto -->
-    <v-expansion-panels v-if="menuStore.id_tipo == 0" v-model="menuStore.expandir" multiple color="blue-grey-lighten-3"
+    <v-expansion-panels v-if="menuStore.id_tipo == 0" v-model="menuStore.expandir" multiple color="primary"
         elevation="0" flat rounded="0" :static="true" :tile="true">
         <v-expansion-panel v-for="(categoria, index) in menuStore.menuFiltrado" :key="index" :title="categoria.nombre">
             <v-expansion-panel-text>

@@ -18,15 +18,19 @@ const theme = useTheme()
 const ajustesStore = useAjustesStore()
 
 onMounted(async () => {
-  modo.value = ajustesStore.modo;
+    modo.value = ajustesStore.modo;
 })
 
 watch(modo, (newValue, oldValue) => {
     ajustesStore.modo = newValue;
-    theme.global.name.value = newValue;
-    theme.themes.value.light.colors.primary = '#4caf50'
-    theme.themes.value.light.colors.background = '#FFFFFF'
-    theme.themes.value.dark.colors.primary = '#000000'
-    this.theme.global.name.value = "darkTheme"
+    // theme.global.name.value = newValue;
+    if (newValue == 'light') {
+        theme.themes.value.light.colors.primary = '#666666'
+        theme.themes.value.light.colors.background = '#FFFFFF'
+    }
+    else {
+        theme.themes.value.light.colors.primary = '#000000'
+        theme.themes.value.light.colors.background = '#e1e1e1'
+    }
 })
 </script>
