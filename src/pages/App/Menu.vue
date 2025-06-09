@@ -1,8 +1,6 @@
 <template>
     <ToolBar titulo="Menú" ruta="Inicio" :esApp="true"></ToolBar>
-    <!-- <Logo></Logo> -->
-    <!-- Categorias -->
-    <Categorias></Categorias>
+    <Categorias />
 
     <!-- Texto -->
     <v-expansion-panels v-if="menuStore.id_tipo == 0" v-model="menuStore.expandir" multiple color="primary"
@@ -12,7 +10,6 @@
                 <v-list>
                     <v-list-item v-for="item in categoria.Item" style="padding: 0px; min-height: auto;">
 
-                        <!-- Título -->
                         <v-list-item-title v-if="!item.esCategoria" class="text-precio-2 pl-2"
                             @click="verDetalle(item)">
                             {{ item.nombre }}
@@ -23,16 +20,10 @@
                                 {{ toPesos(item.precio) }}
                             </v-list-item-subtitle>
 
-                            <!-- Favorito -->
                             <v-list-item-action start>
                                 <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
                                 </v-checkbox-btn>
                             </v-list-item-action>
-
-                            <!-- Ver detalle -->
-                            <!-- <v-btn @click="verDetalle(item)" icon="mdi-dots-horizontal" size="x-small"
-                                variant="text">
-                            </v-btn> -->
                         </template>
 
                     </v-list-item>
@@ -42,51 +33,82 @@
     </v-expansion-panels>
 
     <!-- Lista -->
-    <v-card v-if="menuStore.id_tipo == 1" class="mx-auto" max-width="450">
-        <v-list lines="three" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id">
-            <v-list-item v-for="item in categoria.Item" :key="item.id">
-                <v-list-item-title>{{ item.nombre }}</v-list-item-title>
-                <v-list-item-subtitle>{{ item.descripcion }}</v-list-item-subtitle>
-                <v-list-item-subtitle class="font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
+    <v-container>
+        <v-card v-if="menuStore.id_tipo == 1" elevation="0" rounded="0">
+            <v-list lines="three" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id">
+                {{ categoria.nombre }}
+                <v-list-item v-for="item in categoria.Item" :key="item.id" class="pt-0 pb-0">
+                    <v-list-item-title>{{ item.nombre }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ item.descripcion }}</v-list-item-subtitle>
+                    <v-list-item-subtitle class="font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
 
-                <template v-slot:append>
-                    <v-avatar rounded="0" size="80">
-                        <v-img :src="item.foto" cover></v-img>
-                    </v-avatar>
-                    <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
-                    </v-checkbox-btn>
-                </template>
-            </v-list-item>
-        </v-list>
-    </v-card>
-
-    <!-- Recuadro -->
-    <v-card v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id"
-        class="mx-auto" elevation="0" rounded="0">
-        <v-row>
-            <v-col md="6" v-for="item in categoria.Item" :key="item.id" class="d-flex child-flex">
-                <v-card class="mx-auto" elevation="0" rounded="0">
-
-                    <v-img height="80px" :src="item.foto"></v-img>
-
-                    <div class="ml-2">
-                        {{ item.nombre }}
-                    </div>
-                    <div class="ml-2">
-                        {{ item.descripcion }}
-                    </div>
-
-                    <div class="ml-2">
-                        {{ toPesos(item.precio) }}
-                    </div>
-                    <v-card-actions>
+                    <template v-slot:append>
+                        <v-avatar rounded="0" size="60">
+                            <v-img :src="item.foto" cover></v-img>
+                        </v-avatar>
                         <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
                         </v-checkbox-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-card>
+                    </template>
+                </v-list-item>
+            </v-list>
+        </v-card>
+    </v-container>
+
+    <!-- Recuadro -->
+    <v-sheet class="d-flex align-content-start flex-wrap bg-surface-variant" min-height="200">
+        <v-sheet v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id"
+            class="ma-2 pa-2">
+            {{ categoria.nombre }}
+
+            <v-card v-for="item in categoria.Item" :key="item.id" variant="flat" color="primary" max-width="100"
+                elevation="0" rounded="0" class="mx-auto">
+                <v-img :src="item.foto" aspect-ratio="1" cover :width="100"></v-img>
+                <v-card-title class="text-body-2">
+                    {{ item.nombre }}
+                </v-card-title>
+                <v-row>
+                    <v-col class="ml-4 mt-2 text-caption">
+                        {{ toPesos(item.precio) }}
+                    </v-col>
+                    <v-col>
+                        <div class="d-flex align-end flex-column mr-2">
+                            <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
+                            </v-checkbox-btn>
+                        </div>
+                    </v-col>
+                </v-row>
+            </v-card>
+        </v-sheet>
+    </v-sheet>
+    <!-- <v-container class="pa-0">
+        <v-card v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id"
+            class="mx-aut" elevation="0" rounded="0">
+            <v-card-title>{{ categoria.nombre }}</v-card-title>
+            <v-row>
+                <v-col v-for="item in categoria.Item" :key="item.id" cols="12" md="6" >
+                    <v-card variant="flat" color="primary" max-width="200" elevation="0" rounded="0" class="mx-auto">
+                        <v-img  :src="item.foto" aspect-ratio="1" cover :width="200"></v-img>
+                        <v-card-title class="text-body-2">
+                            {{ item.nombre }}
+                        </v-card-title>
+                        <v-row>
+                            <v-col class="ml-4 mt-2 text-caption">
+                                {{ toPesos(item.precio) }}
+                            </v-col>
+                            <v-col>
+                                <div class="d-flex align-end flex-column mr-2">
+                                    <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
+                                    </v-checkbox-btn>
+                                </div>
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                    <div class="text-center text-caption">{{ variant }}</div>
+                </v-col>
+            </v-row>
+        </v-card>
+    </v-container> -->
+
 
     <!-- Detalle -->
     <v-bottom-sheet v-model="dialog">
@@ -139,6 +161,8 @@ import { useFiltros } from '@/composables/filtros'
 import { useMenuStore } from "@/stores/menu";
 import { useCategoriasStore } from "@/stores/categorias";
 import { useEmpresaStore } from "@/stores/empresa";
+
+const variants = ['elevated', 'flat', 'tonal', 'outlined', 'text', 'plain']
 
 const tabs = ref(null)
 // const categoriaSeleccionada = ref(0)

@@ -53,6 +53,11 @@
   <v-main>
     <router-view />
   </v-main>
+
+  <v-overlay persistent disabled :model-value="showOverlay" class="align-center justify-center">
+    <v-progress-circular color="primary" size="48" indeterminate></v-progress-circular>
+  </v-overlay>
+
 </template>
 
 <script setup>
@@ -97,6 +102,7 @@ const drawer = ref(false)
 const empresa = ref('')
 const links = ref([])
 const varios = ref([])
+const showOverlay = ref(false)
 
 // Stores
 const categoriasStore = useCategoriasStore()
@@ -108,6 +114,7 @@ const horarioStore = useHorarioStore()
 const galeriaStore = useGaleriaStore()
 
 onMounted(async () => {
+  showOverlay.value = true;
   empresa.value = route.params.empresa;
   await getEmpresaPorNombreData();
   await getContactoData();
@@ -116,6 +123,7 @@ onMounted(async () => {
   await getSugeridosData();
   await getGaleriaData();
   await getMenuData();
+  showOverlay.value = false;
 })
 
 async function getEmpresaPorNombreData() {
