@@ -16,7 +16,7 @@
         </template>
     </v-toolbar>
 
-    <v-container>
+    <v-container class="mt-16">
         <v-row>
             <v-col v-for="galeria in galeriaStore.fotos" :key="galeria.id" class="d-flex child-flex" cols="6">
                 <v-img :src="galeria.foto" aspect-ratio="1" class="bg-grey-lighten-2" cover>

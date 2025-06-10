@@ -1,7 +1,7 @@
 <template>
   <ToolBar titulo="Pedido" ruta="Principal/Menu" :esApp="true"></ToolBar>
 
-  <v-table density="compact">
+  <v-table density="compact" class="mt-16">
     <thead style="background-color: lightblue;">
       <tr>
         <th class="text-left">

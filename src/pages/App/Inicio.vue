@@ -46,6 +46,7 @@ const { goTo } = useHelper();
 const empresaStore = useEmpresaStore()
 
 onMounted(async () => {
+  console.log('Inicio');
   logo.value = empresaStore.empresa.logo;
 })
 

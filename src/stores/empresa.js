@@ -15,11 +15,14 @@ export const useEmpresaStore = defineStore('empresa', () => {
         email:'',        
     })
 
+    const ingreso = ref('') 
+
     // Getters
 
     // Actions
 
     return {
         empresa,
+        ingreso,
     }
 })

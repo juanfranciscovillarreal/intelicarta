@@ -1,6 +1,7 @@
 <template>
     <ToolBar titulo="Menú" ruta="Inicio" :esApp="true"></ToolBar>
-    <Categorias />
+
+    <Categorias class="mt-16" />
 
     <!-- Texto -->
     <v-expansion-panels v-if="menuStore.id_tipo == 0" v-model="menuStore.expandir" multiple color="primary"
@@ -8,54 +9,63 @@
         <v-expansion-panel v-for="(categoria, index) in menuStore.menuFiltrado" :key="index" :title="categoria.nombre">
             <v-expansion-panel-text>
                 <v-list>
-                    <v-list-item v-for="item in categoria.Item" style="padding: 0px; min-height: auto;">
+                    <v-list-item v-for="item in categoria.Item" style="padding: 0px; min-height: auto;" class="mb-2">
 
                         <v-list-item-title v-if="!item.esCategoria" class="text-precio-2 pl-2"
-                            @click="verDetalle(item)">
+                            >
                             {{ item.nombre }}
                         </v-list-item-title>
 
-                        <template v-slot:append v-if="!item.esCategoria">
-                            <v-list-item-subtitle class="mr-2">
+                        <v-list-item-subtitle class="pl-4">{{ item.descripcion }}</v-list-item-subtitle>
+                        <v-list-item-subtitle class="pl-4 font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
+
+                        <template v-slot:append v-if="!item.esCategoria" >
+                            <!-- <v-list-item-subtitle class="mr-2">
                                 {{ toPesos(item.precio) }}
-                            </v-list-item-subtitle>
+                            </v-list-item-subtitle> -->
 
                             <v-list-item-action start>
+                                <v-avatar rounded="0" size="60">
+                                    <v-img :src="item.foto" cover @click="verDetalle(item)"></v-img>
+                                </v-avatar>
                                 <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
                                 </v-checkbox-btn>
                             </v-list-item-action>
                         </template>
 
                     </v-list-item>
+                    
                 </v-list>
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>
 
     <!-- Lista -->
-    <v-container>
-        <v-card v-if="menuStore.id_tipo == 1" elevation="0" rounded="0">
-            <v-list lines="three" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id">
-                {{ categoria.nombre }}
-                <v-list-item v-for="item in categoria.Item" :key="item.id" class="pt-0 pb-0">
-                    <v-list-item-title>{{ item.nombre }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ item.descripcion }}</v-list-item-subtitle>
-                    <v-list-item-subtitle class="font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
 
-                    <template v-slot:append>
-                        <v-avatar rounded="0" size="60">
-                            <v-img :src="item.foto" cover></v-img>
-                        </v-avatar>
-                        <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
-                        </v-checkbox-btn>
-                    </template>
-                </v-list-item>
-            </v-list>
-        </v-card>
-    </v-container>
+    <!-- <v-card v-if="menuStore.id_tipo == 1" elevation="0" rounded="0" > -->
+    <v-list v-if="menuStore.id_tipo == 1" lines="three" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id">
+
+        <v-list-subheader>{{ categoria.nombre }}</v-list-subheader>
+        <v-divider class="ml-4"></v-divider>
+        <v-list-item v-for="item in categoria.Item" :key="item.id" class="pt-0 pb-0">
+            <v-list-item-title>{{ item.nombre }}</v-list-item-title>
+            <v-list-item-subtitle>{{ item.descripcion }}</v-list-item-subtitle>
+            <v-list-item-subtitle class="font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
+
+            <template v-slot:append>
+                <v-avatar rounded="0" size="60">
+                    <v-img :src="item.foto" cover></v-img>
+                </v-avatar>
+                <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
+                </v-checkbox-btn>
+            </template>
+        </v-list-item>
+    </v-list>
+    <!-- </v-card> -->
+
 
     <!-- Recuadro -->
-    <v-sheet class="d-flex align-content-start flex-wrap bg-surface-variant" min-height="200">
+    <v-sheet class="d-flex align-content-start flex-wrap" min-height="200">
         <v-sheet v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id"
             class="ma-2 pa-2">
             {{ categoria.nombre }}

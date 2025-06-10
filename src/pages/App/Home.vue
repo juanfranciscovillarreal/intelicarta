@@ -93,7 +93,7 @@ const { getSugeridos } = useItem();
 const { getMenu } = useMenu();
 const { getContacto } = useContacto();
 const { getHorario } = useHorario();
-const { nombreApp } = useAplicacion();
+const { nombreApp, getHourDifference } = useAplicacion();
 const { getFotos } = useGaleria();
 
 const router = useRouter()
@@ -114,16 +114,25 @@ const horarioStore = useHorarioStore()
 const galeriaStore = useGaleriaStore()
 
 onMounted(async () => {
-  showOverlay.value = true;
-  empresa.value = route.params.empresa;
-  await getEmpresaPorNombreData();
-  await getContactoData();
-  await getHorarioData();
-  await getCategoriasData();
-  await getSugeridosData();
-  await getGaleriaData();
-  await getMenuData();
-  showOverlay.value = false;
+  // Si pasó 1 hora
+  let tiempo = getHourDifference(empresaStore.ingreso, new Date());
+
+  console.log(`Tiempo: ${tiempo}`)
+
+  if (tiempo > 0.1) {
+    console.log('Home' + new Date());
+    empresaStore.ingreso = new Date();
+    showOverlay.value = true;
+    empresa.value = route.params.empresa;
+    await getEmpresaPorNombreData();
+    await getContactoData();
+    await getHorarioData();
+    await getCategoriasData();
+    await getSugeridosData();
+    await getGaleriaData();
+    await getMenuData();
+    showOverlay.value = false;
+  }
 })
 
 async function getEmpresaPorNombreData() {

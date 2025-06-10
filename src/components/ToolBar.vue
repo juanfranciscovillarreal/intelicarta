@@ -16,6 +16,14 @@
 
         <Buscar v-if="route.path.includes('Menu')" />
 
+        <!-- Opción Ver Pedido -->
+        <v-btn @click="verPedido()" icon v-if="route.path.includes('Menu')">
+            <v-badge v-if="menuStore.total > 0" color="success" dot>
+                <v-icon>mdi-receipt-text-outline</v-icon>
+            </v-badge>
+            <v-icon v-else="menuStore.total = 0">mdi-receipt-text-outline</v-icon>
+        </v-btn>
+
         <v-btn v-if="props.icono != null" :icon="props.icono" @click="$emit('evento_click')"></v-btn>
 
         <v-btn icon>
@@ -33,7 +41,7 @@
         </v-list>
 
         <v-divider></v-divider>
-        
+
         <v-list density="compact" nav>
             <v-list-item>
                 <v-list-subheader>Ver menú como...</v-list-subheader>
@@ -88,6 +96,10 @@ function navegar() {
     } else {
         router.push(props.ruta);
     }
+}
+
+function verPedido() {
+    goTo('Principal/Pedido');
 }
 
 function selected(text) {
