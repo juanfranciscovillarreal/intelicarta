@@ -14,8 +14,6 @@
             </v-fab>
         </template>
 
-        <Buscar v-if="route.path.includes('Menu')" />
-
         <!-- Opción Ver Pedido -->
         <v-btn @click="verPedido()" icon v-if="route.path.includes('Menu')">
             <v-badge v-if="menuStore.total > 0" color="success" dot>

@@ -1,23 +1,20 @@
 <template>
-    <!-- Cerrar búsqueda-->
-    <v-btn v-if="buscar == true && route.path.includes('Menu')" icon>
-        <v-icon @click="cerrar()">mdi-close</v-icon>
-    </v-btn>
+    <v-card
+        class="mx-auto"
+        color="surface"
+        max-width="450">
+        <v-text-field 
+            v-model="texto" 
+            v-if="route.path.includes('Menu')" 
+            hide-details 
+            single-line
+            density="compact"
+            placeholder="Buscar" 
 
-    <!-- Buscar -->
-    <v-menu transition="slide-x-reverse-transition">
-        <template v-slot:activator="{ props }">
-            <!-- Texto a buscar -->
-            <v-text-field v-model="texto" v-if="buscar == true && route.path.includes('Menu')" hide-details single-line
-                placeholder="Buscar" append-inner-icon="mdi-magnify">
-            </v-text-field>
-
-            <!-- Botón Buscar -->
-            <v-btn v-bind="props" v-if="buscar == false && route.path.includes('Menu')" icon="mdi-magnify" variant="text"
-                @click="buscar = true">
-            </v-btn>
-        </template>
-    </v-menu>
+            prepend-inner-icon="mdi-magnify" 
+            clearable>
+        </v-text-field>
+    </v-card>
 </template>
 
 <script setup>
@@ -32,17 +29,8 @@ const menuStore = useMenuStore()
 const buscar = ref(false)
 const texto = ref('')
 
-onMounted(() => {
-
-})
-
-function cerrar() {
-    buscar.value = false;
-    texto.value = '';
-}
-
 watch(texto, (newValue, oldValue) => {
-    texto.value = newValue;
+    texto.value = newValue == null ? '' : newValue;
     filtrar();
 })
 

@@ -1,5 +1,6 @@
 <template>
-    <ToolBar titulo="Contacto" ruta="Inicio" :esApp="true"></ToolBar>
+  <ToolBar titulo="Contacto" ruta="Inicio" :esApp="true"></ToolBar>
+  <v-container class="mt-16">
     <Logo></Logo>
 
     <!-- Dirección -->
@@ -51,22 +52,22 @@
       </v-list-item>
     </v-list>
 
-  <!-- Mapa -->
-  <div class="text-center pa-4">
-    <v-dialog v-model="dialog" transition="dialog-bottom-transition" height="400">
-      <v-card>
-        <Mapa></Mapa>
-      </v-card>
-    </v-dialog>
-  </div>
+    <!-- Mapa -->
+    <div class="text-center pa-4">
+      <v-dialog v-model="dialog" transition="dialog-bottom-transition" height="400">
+        <v-card>
+          <Mapa></Mapa>
+        </v-card>
+      </v-dialog>
+    </div>
 
-  <!-- Snackbar -->
-  <v-sheet class="d-flex flex-column">
-    <v-snackbar v-model="snackbar" min-width="100" color="primary">
-      {{ snackbarText }} copiado
-    </v-snackbar>
-  </v-sheet>
-
+    <!-- Snackbar -->
+    <v-sheet class="d-flex flex-column">
+      <v-snackbar v-model="snackbar" min-width="100" color="primary">
+        {{ snackbarText }} copiado
+      </v-snackbar>
+    </v-sheet>
+  </v-container>
 </template>
 
 <script setup>

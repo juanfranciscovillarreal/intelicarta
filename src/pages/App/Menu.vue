@@ -1,96 +1,101 @@
 <template>
     <ToolBar titulo="Menú" ruta="Inicio" :esApp="true"></ToolBar>
 
-    <Categorias class="mt-16" />
+    <v-container class="mt-16 pl-0 pr-0">
+        <Buscar />
+        <Categorias />
 
-    <!-- Texto -->
-    <v-expansion-panels v-if="menuStore.id_tipo == 0" v-model="menuStore.expandir" multiple color="primary"
-        elevation="0" flat rounded="0" :static="true" :tile="true">
-        <v-expansion-panel v-for="(categoria, index) in menuStore.menuFiltrado" :key="index" :title="categoria.nombre">
-            <v-expansion-panel-text>
-                <v-list>
-                    <v-list-item v-for="item in categoria.Item" style="padding: 0px; min-height: auto;" class="mb-2">
+        <!-- Texto -->
+        <v-expansion-panels v-if="menuStore.id_tipo == 0" v-model="menuStore.expandir" multiple color="primary"
+            elevation="0" flat rounded="0" :static="true" :tile="true">
+            <v-expansion-panel v-for="(categoria, index) in menuStore.menuFiltrado" :key="index"
+                :title="categoria.nombre">
+                <v-expansion-panel-text>
+                    <v-list>
+                        <v-list-item v-for="item in categoria.Item" style="padding: 0px; min-height: auto;"
+                            class="mb-2">
 
-                        <v-list-item-title v-if="!item.esCategoria" class="text-precio-2 pl-2"
-                            >
-                            {{ item.nombre }}
-                        </v-list-item-title>
+                            <v-list-item-title v-if="!item.esCategoria" class="text-precio-2 pl-2">
+                                {{ item.nombre }}
+                            </v-list-item-title>
 
-                        <v-list-item-subtitle class="pl-4">{{ item.descripcion }}</v-list-item-subtitle>
-                        <v-list-item-subtitle class="pl-4 font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
+                            <v-list-item-subtitle class="pl-4">{{ item.descripcion }}</v-list-item-subtitle>
+                            <v-list-item-subtitle class="pl-4 font-weight-bold">{{ toPesos(item.precio)
+                                }}</v-list-item-subtitle>
 
-                        <template v-slot:append v-if="!item.esCategoria" >
-                            <!-- <v-list-item-subtitle class="mr-2">
+                            <template v-slot:append v-if="!item.esCategoria">
+                                <!-- <v-list-item-subtitle class="mr-2">
                                 {{ toPesos(item.precio) }}
                             </v-list-item-subtitle> -->
 
-                            <v-list-item-action start>
-                                <v-avatar rounded="0" size="60">
-                                    <v-img :src="item.foto" cover @click="verDetalle(item)"></v-img>
-                                </v-avatar>
+                                <v-list-item-action start>
+                                    <v-avatar rounded="0" size="60">
+                                        <v-img :src="item.foto" cover @click="verDetalle(item)"></v-img>
+                                    </v-avatar>
+                                    <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
+                                    </v-checkbox-btn>
+                                </v-list-item-action>
+                            </template>
+
+                        </v-list-item>
+
+                    </v-list>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
+        </v-expansion-panels>
+
+        <!-- Lista -->
+
+        <!-- <v-card v-if="menuStore.id_tipo == 1" elevation="0" rounded="0" > -->
+        <v-list v-if="menuStore.id_tipo == 1" lines="three" v-for="categoria in menuStore.menuFiltrado"
+            :key="categoria.id">
+
+            <v-list-subheader>{{ categoria.nombre }}</v-list-subheader>
+            <v-divider class="ml-4"></v-divider>
+            <v-list-item v-for="item in categoria.Item" :key="item.id" class="pt-0 pb-0">
+                <v-list-item-title>{{ item.nombre }}</v-list-item-title>
+                <v-list-item-subtitle>{{ item.descripcion }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
+
+                <template v-slot:append>
+                    <v-avatar rounded="0" size="60">
+                        <v-img :src="item.foto" cover></v-img>
+                    </v-avatar>
+                    <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
+                    </v-checkbox-btn>
+                </template>
+            </v-list-item>
+        </v-list>
+        <!-- </v-card> -->
+
+
+        <!-- Recuadro -->
+        <v-sheet class="d-flex align-content-start flex-wrap" min-height="200">
+            <v-sheet v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id"
+                class="ma-2 pa-2">
+                {{ categoria.nombre }}
+
+                <v-card v-for="item in categoria.Item" :key="item.id" variant="flat" color="primary" max-width="100"
+                    elevation="0" rounded="0" class="mx-auto">
+                    <v-img :src="item.foto" aspect-ratio="1" cover :width="100"></v-img>
+                    <v-card-title class="text-body-2">
+                        {{ item.nombre }}
+                    </v-card-title>
+                    <v-row>
+                        <v-col class="ml-4 mt-2 text-caption">
+                            {{ toPesos(item.precio) }}
+                        </v-col>
+                        <v-col>
+                            <div class="d-flex align-end flex-column mr-2">
                                 <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
                                 </v-checkbox-btn>
-                            </v-list-item-action>
-                        </template>
-
-                    </v-list-item>
-                    
-                </v-list>
-            </v-expansion-panel-text>
-        </v-expansion-panel>
-    </v-expansion-panels>
-
-    <!-- Lista -->
-
-    <!-- <v-card v-if="menuStore.id_tipo == 1" elevation="0" rounded="0" > -->
-    <v-list v-if="menuStore.id_tipo == 1" lines="three" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id">
-
-        <v-list-subheader>{{ categoria.nombre }}</v-list-subheader>
-        <v-divider class="ml-4"></v-divider>
-        <v-list-item v-for="item in categoria.Item" :key="item.id" class="pt-0 pb-0">
-            <v-list-item-title>{{ item.nombre }}</v-list-item-title>
-            <v-list-item-subtitle>{{ item.descripcion }}</v-list-item-subtitle>
-            <v-list-item-subtitle class="font-weight-bold">{{ toPesos(item.precio) }}</v-list-item-subtitle>
-
-            <template v-slot:append>
-                <v-avatar rounded="0" size="60">
-                    <v-img :src="item.foto" cover></v-img>
-                </v-avatar>
-                <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
-                </v-checkbox-btn>
-            </template>
-        </v-list-item>
-    </v-list>
-    <!-- </v-card> -->
-
-
-    <!-- Recuadro -->
-    <v-sheet class="d-flex align-content-start flex-wrap" min-height="200">
-        <v-sheet v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id"
-            class="ma-2 pa-2">
-            {{ categoria.nombre }}
-
-            <v-card v-for="item in categoria.Item" :key="item.id" variant="flat" color="primary" max-width="100"
-                elevation="0" rounded="0" class="mx-auto">
-                <v-img :src="item.foto" aspect-ratio="1" cover :width="100"></v-img>
-                <v-card-title class="text-body-2">
-                    {{ item.nombre }}
-                </v-card-title>
-                <v-row>
-                    <v-col class="ml-4 mt-2 text-caption">
-                        {{ toPesos(item.precio) }}
-                    </v-col>
-                    <v-col>
-                        <div class="d-flex align-end flex-column mr-2">
-                            <v-checkbox-btn v-model="item.favorito" @change="favoritoChange(item)">
-                            </v-checkbox-btn>
-                        </div>
-                    </v-col>
-                </v-row>
-            </v-card>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-sheet>
         </v-sheet>
-    </v-sheet>
-    <!-- <v-container class="pa-0">
+        <!-- <v-container class="pa-0">
         <v-card v-if="menuStore.id_tipo == 2" v-for="categoria in menuStore.menuFiltrado" :key="categoria.id"
             class="mx-aut" elevation="0" rounded="0">
             <v-card-title>{{ categoria.nombre }}</v-card-title>
@@ -120,43 +125,44 @@
     </v-container> -->
 
 
-    <!-- Detalle -->
-    <v-bottom-sheet v-model="dialog">
-        <v-card elevation="0" rounded="0">
-            <v-toolbar>
-                <v-toolbar-title>{{ dialogTitulo }}</v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn icon="mdi-close" @click="dialog = false"></v-btn>
-            </v-toolbar>
+        <!-- Detalle -->
+        <v-bottom-sheet v-model="dialog">
+            <v-card elevation="0" rounded="0">
+                <v-toolbar>
+                    <v-toolbar-title>{{ dialogTitulo }}</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn icon="mdi-close" @click="dialog = false"></v-btn>
+                </v-toolbar>
 
-            <v-card variant="flat">
-                <v-img height="250" :src="dialogFoto" cover></v-img>
+                <v-card variant="flat">
+                    <v-img height="250" :src="dialogFoto" cover></v-img>
 
-                <v-card-item>
-                    <v-card-title>
-                        <v-row no-gutters>
-                            <!-- Nombre -->
-                            <v-col cols="6">
-                                <v-card-title>{{ dialogTitulo }}</v-card-title>
-                            </v-col>
+                    <v-card-item>
+                        <v-card-title>
+                            <v-row no-gutters>
+                                <!-- Nombre -->
+                                <v-col cols="6">
+                                    <v-card-title>{{ dialogTitulo }}</v-card-title>
+                                </v-col>
 
-                            <!-- Precio -->
-                            <v-col class="text-right" cols="6">
-                                <v-card-subtitle>
-                                    <span class="me-1">{{ toPesos(dialogSubtitulo) }}</span>
-                                </v-card-subtitle>
-                            </v-col>
-                        </v-row>
-                    </v-card-title>
-                </v-card-item>
+                                <!-- Precio -->
+                                <v-col class="text-right" cols="6">
+                                    <v-card-subtitle>
+                                        <span class="me-1">{{ toPesos(dialogSubtitulo) }}</span>
+                                    </v-card-subtitle>
+                                </v-col>
+                            </v-row>
+                        </v-card-title>
+                    </v-card-item>
 
-                <!-- Descripcion -->
-                <v-card-text>
-                    {{ dialogDescripcion }}
-                </v-card-text>
+                    <!-- Descripcion -->
+                    <v-card-text>
+                        {{ dialogDescripcion }}
+                    </v-card-text>
+                </v-card>
             </v-card>
-        </v-card>
-    </v-bottom-sheet>
+        </v-bottom-sheet>
+    </v-container>
 </template>
 
 <script setup>
@@ -165,6 +171,7 @@ import { ref, watch, onMounted, computed } from 'vue'
 import Categorias from '@/components/Categorias.vue';
 import Logo from '@/components/Logo.vue';
 import ToolBar from '@/components/ToolBar.vue';
+import Buscar from '@/components/Buscar.vue';
 // Composables
 import { useFiltros } from '@/composables/filtros'
 // Stores
