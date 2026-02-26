@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar color="primary">
+    <v-app-bar color="primary" extension-height="12">
         <template v-slot:prepend>
             <v-btn icon="mdi-arrow-left" @click="navegar()"></v-btn>
         </template>
@@ -83,6 +83,8 @@ const props = defineProps({
     nuevo: Boolean,
     esApp: Boolean
 })
+
+const emit = defineEmits(['verDialogo'])
 
 watch(tipoMenu, (newValue, oldValue) => {
     menuStore.id_tipo = newValue;

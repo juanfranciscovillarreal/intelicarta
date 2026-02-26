@@ -1,6 +1,6 @@
 
 // Stackblitz
-
+/*
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { fileURLToPath, URL } from 'node:url';
@@ -19,8 +19,9 @@ export default defineConfig({
     port: 3000,
   },
 });
+*/
 
-/*
+
 // Plugins
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -111,4 +112,3 @@ export default defineConfig({
     },
   },
 })
-*/

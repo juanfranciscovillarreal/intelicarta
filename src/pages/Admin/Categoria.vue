@@ -1,33 +1,34 @@
 <template>
-  <v-card elevation="0" rounded="0">
-    <ToolBar titulo="Categorías" ruta="/Administracion" :nuevo="true" @verDialogo="add()"></ToolBar>
+  <v-container class="mt-10 pa-0">
+    <v-card elevation="0" rounded="0" class="mt-10">
+      <ToolBar titulo="Categorías" ruta="/Administracion" :nuevo="true" @verDialogo="add()"></ToolBar>
 
-    <v-row no-gutters>
-      <v-col cols="12">
-        <!-- Buscar -->
-        <v-text-field v-model="filter" @keyup="filtrar" prepend-inner-icon="mdi-magnify" label="Buscar" single-line
-          hide-details clearable @click:clear="listar">
-        </v-text-field>
-      </v-col>
-    </v-row>
+      <v-row no-gutters>
+        <v-col cols="12">
+          <!-- Buscar -->
+          <v-text-field v-model="filter" @keyup="filtrar" prepend-inner-icon="mdi-magnify" label="Buscar" single-line
+            hide-details clearable @click:clear="listar">
+          </v-text-field>
+        </v-col>
+      </v-row>
 
-    <v-row no-gutters>
-      <v-col cols="12" lg="6" md="6" sm="12">
-        <v-list lines="two">
-          <v-list-item v-for="categoria in listaCategorias" :key="categoria.id" :title="categoria.nombre">
-            <template v-slot:append>
-              <div class="d-flex ga-2 justify-end">
-                <v-icon color="medium-emphasis" icon="mdi-pencil" size="small" @click="edit(categoria)"></v-icon>
+      <v-row no-gutters>
+        <v-col cols="12" lg="6" md="6" sm="12">
+          <v-list lines="two">
+            <v-list-item v-for="categoria in listaCategorias" :key="categoria.id" :title="categoria.nombre">
+              <template v-slot:append>
+                <div class="d-flex ga-2 justify-end">
+                  <v-icon color="medium-emphasis" icon="mdi-pencil" size="small" @click="edit(categoria)"></v-icon>
 
-                <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="remove(categoria)"></v-icon>
-              </div>
-            </template>
-          </v-list-item>
-        </v-list>
-      </v-col>
-    </v-row>
-  </v-card>
-
+                  <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="remove(categoria)"></v-icon>
+                </div>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-col>
+      </v-row>
+    </v-card>
+  </v-container>
 
   <!-- Diálogo  -->
   <div class="text-center pa-4">

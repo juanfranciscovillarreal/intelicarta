@@ -1,79 +1,85 @@
 <template>
-  <v-card elevation="0" rounded="0">
-    <ToolBar titulo="Menú" ruta="/Administracion" :nuevo="true" @verDialogo="addCategoria()"></ToolBar>
+  <v-container class="pa-0">
+    <v-card elevation="0" rounded="0">
+      <!-- <ToolBar titulo="Menú" ruta="/Administracion" :nuevo="true" @verDialogo="addCategoria()"></ToolBar> -->
+       <!-- Buscar -->
+      <v-row no-gutters>
+        <v-col cols="12">
+          <v-text-field v-model="filter" @keyup="filtrar" prepend-inner-icon="mdi-magnify" label="Buscar" single-line
+            hide-details clearable @click:clear="listar">
+          </v-text-field>
+        </v-col>
+      </v-row>
 
-    <v-row no-gutters>
-      <v-col cols="12">
-        <!-- Buscar -->
-        <v-text-field v-model="filter" @keyup="filtrar" prepend-inner-icon="mdi-magnify" label="Buscar" single-line
-          hide-details clearable @click:clear="listar">
-        </v-text-field>
-      </v-col>
-    </v-row>
+      <!-- Menú -->
+      <v-row no-gutters>
+        <v-col cols="12">
+          <v-data-table :headers="categoriasHeaders" :items="listaMenu" item-value="id" show-expand hide-default-footer
+            hide-default-header :loading="loadingMenu">
+            <template v-slot:loading>
+              <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
+            </template>
 
-    <v-row no-gutters>
-      <v-col lg="6" md="6" sm="12">
-        <v-data-table :headers="categoriasHeaders" :items="listaMenu" item-value="id" show-expand hide-default-footer
-          hide-default-header :loading="loadingMenu">
-          <template v-slot:loading>
-            <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
-          </template>
+            <!-- Categorías -->
+            <template v-slot:item.data-table-expand="{
+              internalItem,
+              isExpanded,
+              toggleExpand,
+            }">
+              <div class="d-flex ga-2 justify-end">
+                <v-icon color="medium-emphasis" icon="mdi-pencil" size="small"
+                  @click="editCategoria(internalItem.value)"></v-icon>
 
-          <!-- Categorías -->
-          <template v-slot:item.data-table-expand="{
-      internalItem,
-      isExpanded,
-      toggleExpand,
-    }">
-            <div class="d-flex ga-2 justify-end">
-              <v-icon color="medium-emphasis" icon="mdi-pencil" size="small"
-                @click="editCategoria(internalItem.value)"></v-icon>
+                <v-icon color="medium-emphasis" icon="mdi-delete" size="small"
+                  @click="deleteCategoria(internalItem)"></v-icon>
 
-              <v-icon color="medium-emphasis" icon="mdi-delete" size="small"
-                @click="deleteCategoria(internalItem)"></v-icon>
+                <v-icon color="medium-emphasis" icon="mdi-plus" size="small"
+                  @click="addItem(internalItem.value)"></v-icon>
 
-              <v-icon color="medium-emphasis" icon="mdi-plus" size="small"
-                @click="addItem(internalItem.value)"></v-icon>
+                <v-btn :icon="isExpanded(internalItem)
+                  ? 'mdi-chevron-up'
+                  : 'mdi-chevron-down'
+                  " color="medium-emphasis" density="comfortable" size="small" variant="outlined"
+                  @click="toggleExpand(internalItem)">
+                </v-btn>
+              </div>
+            </template>
 
-              <v-btn :icon="isExpanded(internalItem)
-        ? 'mdi-chevron-up'
-        : 'mdi-chevron-down'
-      " color="medium-emphasis" density="comfortable" size="small" variant="outlined"
-                @click="toggleExpand(internalItem)">
-              </v-btn>
-            </div>
-          </template>
+            <!-- Items -->
+            <template v-slot:expanded-row="{ columns, item }">
+              <tr>
+                <td :colspan="columns.length" class="pl-2">
+                  <v-table density="compact">
+                    <tbody>
+                      <tr v-for="item in item.Item" :key="item.name">
+                        <td>
+                          <v-avatar rounded="0" size="40">
+                            <v-img :src="item.foto" cover></v-img>
+                          </v-avatar>
+                        </td>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.precio }}</td>
+                        <td>
+                          <div class="d-flex ga-2 justify-end">
+                            <v-icon color="medium-emphasis" icon="mdi-pencil" size="small"
+                              @click="editItem(item)"></v-icon>
 
-          <!-- Items -->
-          <template v-slot:expanded-row="{ columns, item }">
-            <tr>
-              <td :colspan="columns.length" class="pl-2">
-                <v-table density="compact">
-                  <tbody>
-                    <tr v-for="item in item.Item" :key="item.name">
-                      <td>{{ item.nombre }}</td>
-                      <td>{{ item.precio }}</td>
-                      <td>
-                        <div class="d-flex ga-2 justify-end">
-                          <v-icon color="medium-emphasis" icon="mdi-pencil" size="small"
-                            @click="editItem(item)"></v-icon>
+                            <v-icon color="medium-emphasis" icon="mdi-delete" size="small"
+                              @click="deleteItem(item.id)"></v-icon>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
+    </v-card>
 
-                          <v-icon color="medium-emphasis" icon="mdi-delete" size="small"
-                            @click="deleteItem(item.id)"></v-icon>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </v-col>
-    </v-row>
-  </v-card>
-
-  <!-- Diálogo Categoría -->
+    <!-- Diálogo Categoría -->
   <v-dialog v-model="dialogCategoria" transition="dialog-bottom-transition" max-width="800">
     <v-form v-model="formCategoria" @submit.prevent="onSubmitCategoria">
       <v-card>
@@ -104,70 +110,72 @@
     </v-form>
   </v-dialog>
 
-  <!-- Diálogo Item -->
-  <div class="text-center pa-4">
-    <v-dialog v-model="dialogItem" transition="dialog-bottom-transition" max-width="800">
-      <v-form v-model="formItem" @submit.prevent="onSubmitItem">
-        <v-card>
-          <v-card-title class="bg-surface-light">
-            {{ getDialogTitle("Item") }}
-          </v-card-title>
+    <!-- Diálogo Item -->
+    <div class="text-center pa-4">
+      <v-dialog v-model="dialogItem" transition="dialog-bottom-transition" max-width="800">
+        <v-form v-model="formItem" @submit.prevent="onSubmitItem">
+          <v-card>
+            <v-card-title class="bg-surface-light">
+              {{ getDialogTitle("Item") }}
+            </v-card-title>
 
-          <v-card-text>
-            <!-- Avatar -->
-            <v-row no-gutters>
-              <v-col cols="12">
-                <Avatar :avatar="recordItem.foto" @onUpdateAvatar="updateAvatar"></Avatar>
-              </v-col>
-            </v-row>
+            <v-card-text>
+              <!-- Avatar -->
+              <v-row no-gutters>
+                <v-col cols="12">
+                  <Avatar :avatar="recordItem.foto" @onUpdateAvatar="updateAvatar"></Avatar>
+                </v-col>
+              </v-row>
 
-            <v-row no-gutters>
-              <!-- nombre -->
-              <v-col cols="12" md="4">
-                <v-text-field v-model="recordItem.nombre" :rules="[rules.required, rules.max50]" label="Nombre"
-                  variant="underlined" clearable prepend-icon="mdi-tag-text">
-                </v-text-field>
-              </v-col>
+              <v-row no-gutters>
+                <!-- nombre -->
+                <v-col cols="12" md="4">
+                  <v-text-field v-model="recordItem.nombre" :rules="[rules.required, rules.max50]" label="Nombre"
+                    variant="underlined" clearable prepend-icon="mdi-tag-text">
+                  </v-text-field>
+                </v-col>
 
-              <!-- descripcion -->
-              <v-col cols="12" md="4">
-                <v-text-field v-model="recordItem.descripcion" :rules="[rules.required, rules.max50]"
-                  label="Descripción" variant="underlined" clearable prepend-icon="mdi-text">
-                </v-text-field>
-              </v-col>
+                <!-- descripcion -->
+                <v-col cols="12" md="4">
+                  <v-text-field v-model="recordItem.descripcion" :rules="[rules.required, rules.max50]"
+                    label="Descripción" variant="underlined" clearable prepend-icon="mdi-text">
+                  </v-text-field>
+                </v-col>
 
-              <!-- precio -->
-              <v-col cols="12" md="4">
-                <v-text-field v-model="recordItem.precio" :rules="[rules.required]" label="Precio" variant="underlined"
-                  clearable prepend-icon="mdi-currency-usd">
-                </v-text-field>
-              </v-col>
-            </v-row>
-          </v-card-text>
+                <!-- precio -->
+                <v-col cols="12" md="4">
+                  <v-text-field v-model="recordItem.precio" :rules="[rules.required]" label="Precio"
+                    variant="underlined" clearable prepend-icon="mdi-currency-usd">
+                  </v-text-field>
+                </v-col>
+              </v-row>
+            </v-card-text>
 
-          <v-divider></v-divider>
+            <v-divider></v-divider>
 
-          <v-card-actions class="bg-surface-light">
-            <v-btn text="Cancelar" variant="plain" @click="dialogItem = false"></v-btn>
-            <v-spacer></v-spacer>
-            <v-btn type="submit" text="Aceptar" color="primary"></v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-form>
-    </v-dialog>
-  </div>
+            <v-card-actions class="bg-surface-light">
+              <v-btn text="Cancelar" variant="plain" @click="dialogItem = false"></v-btn>
+              <v-spacer></v-spacer>
+              <v-btn type="submit" text="Aceptar" color="primary"></v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
+      </v-dialog>
+    </div>
 
-  <Dialog :show="dialogShow" :titulo="dialogTitulo" :mensaje="dialogMensaje" @dialogCerrar="dialogShow = false">
-  </Dialog>
+    <Dialog :show="dialogShow" :titulo="dialogTitulo" :mensaje="dialogMensaje" @dialogCerrar="dialogShow = false">
+    </Dialog>
 
-  <Confirm :show="confirmarShow" :titulo="confirmarTitulo" :mensaje="confirmarMensaje"
-    @confirmarCerrar="confirmarShow = false" @confirmarAceptar="confirmarAceptar">
-  </Confirm>
+    <Confirm :show="confirmarShow" :titulo="confirmarTitulo" :mensaje="confirmarMensaje"
+      @confirmarCerrar="confirmarShow = false" @confirmarAceptar="confirmarAceptar">
+    </Confirm>
 
-  <v-overlay persistent disabled :model-value="showOverlay" class="align-center justify-center">
-    <v-progress-circular color="primary" size="48" indeterminate></v-progress-circular>
-  </v-overlay>
+    <v-overlay persistent disabled :model-value="showOverlay" class="align-center justify-center">
+      <v-progress-circular color="primary" size="48" indeterminate></v-progress-circular>
+    </v-overlay>
 
+
+  </v-container>
 </template>
 
 <script setup>
@@ -249,8 +257,7 @@ const confirmarMensaje = ref("");
 const showOverlay = ref(false)
 
 // Composables
-const { getCategorias, updateCategoria, insertCategoria, removeCategoria } =
-  useCategoria();
+const { getCategorias, updateCategoria, insertCategoria, removeCategoria } = useCategoria();
 const { getItems, updateItem, insertItem, removeItem } = useItem();
 const { getMenu } = useMenu();
 const { rules } = useReglas();

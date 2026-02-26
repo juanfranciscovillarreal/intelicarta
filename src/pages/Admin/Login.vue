@@ -1,50 +1,51 @@
 <template>
-    <ToolBar titulo="Iniciar sesión" ruta="/"></ToolBar>
+    <v-container class="mt-10 pa-0">
+        <ToolBar titulo="Iniciar sesión" ruta="/"></ToolBar>
 
-    <v-card class="mx-auto pa-6 mt-2" elevation="0" rounded="0" variant="text" max-width="448" min-width="360">
-        <v-form v-model="form" @submit.prevent="onSubmit">
-            <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-                Correo
-            </div>
+        <v-card class="mx-auto pa-6 mt-2" elevation="0" rounded="0" variant="text" max-width="448" min-width="360">
+            <v-form v-model="form" @submit.prevent="onSubmit">
+                <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+                    Correo
+                </div>
 
-            <v-text-field v-model="email" density="compact" placeholder="Email address"
-                prepend-inner-icon="mdi-email-outline" variant="outlined"
-                :rules="[rules.required, rules.email]"></v-text-field>
+                <v-text-field v-model="email" density="compact" placeholder="Email address"
+                    prepend-inner-icon="mdi-email-outline" variant="outlined"
+                    :rules="[rules.required, rules.email]"></v-text-field>
 
-            <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-                Clave
-            </div>
+                <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+                    Clave
+                </div>
 
-            <v-text-field v-model="password" :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                :type="visible ? 'text' : 'password'" density="compact" placeholder="Enter your password"
-                prepend-inner-icon="mdi-lock-outline" variant="outlined" @click:append-inner="visible = !visible"
-                :rules="[rules.required, rules.counter]"></v-text-field>
+                <v-text-field v-model="password" :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                    :type="visible ? 'text' : 'password'" density="compact" placeholder="Enter your password"
+                    prepend-inner-icon="mdi-lock-outline" variant="outlined" @click:append-inner="visible = !visible"
+                    :rules="[rules.required, rules.counter]"></v-text-field>
 
-            <v-btn color="blue" size="large" variant="tonal" block type="submit">
-                Ingresar
-            </v-btn>
-
-            <v-card-text class="text-center">
-                <v-btn variant="plain" @click="router.push('/signUp')">
-                    Registrarse
+                <v-btn color="blue" size="large" variant="tonal" block type="submit">
+                    Ingresar
                 </v-btn>
-            </v-card-text>
 
-            <div class="text-center">
-                <v-btn size="x-small" variant="plain" @click="router.push('/forgotPass')">
-                    ¿Olvidó la clave?
-                </v-btn>
-            </div>
-        </v-form>
-    </v-card>
+                <v-card-text class="text-center">
+                    <v-btn variant="plain" @click="router.push('/signUp')">
+                        Registrarse
+                    </v-btn>
+                </v-card-text>
 
-    <Dialog :show="dialogShow" :titulo="dialogTitulo" :mensaje="dialogMensaje" @dialogCerrar="dialogShow = false">
-    </Dialog>
+                <div class="text-center">
+                    <v-btn size="x-small" variant="plain" @click="router.push('/forgotPass')">
+                        ¿Olvidó la clave?
+                    </v-btn>
+                </div>
+            </v-form>
+        </v-card>
 
-    <v-overlay persistent disabled :model-value="showOverlay" class="align-center justify-center">
-        <v-progress-circular color="primary" size="48" indeterminate></v-progress-circular>
-    </v-overlay>
+        <Dialog :show="dialogShow" :titulo="dialogTitulo" :mensaje="dialogMensaje" @dialogCerrar="dialogShow = false">
+        </Dialog>
 
+        <v-overlay persistent disabled :model-value="showOverlay" class="align-center justify-center">
+            <v-progress-circular color="primary" size="48" indeterminate></v-progress-circular>
+        </v-overlay>
+    </v-container>
 </template>
 
 <script setup>

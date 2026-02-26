@@ -110,6 +110,14 @@ const routes = [
     name: 'Administracion',
     component: Administracion,
     meta: { requiresAuth: true },
+    redirect: '/menuabm',
+    children: [
+      {
+        path: '/menuabm',
+        name: 'MenuAbm',
+        component: MenuAbm,
+      },
+    ],
   },
   {
     path: '/categoria',
@@ -126,11 +134,11 @@ const routes = [
     name: 'Empresa',
     component: Empresa,
   },
-  {
-    path: '/menuabm',
-    name: 'MenuAbm',
-    component: MenuAbm,
-  },
+  // {
+  //   path: '/menuabm',
+  //   name: 'MenuAbm',
+  //   component: MenuAbm,
+  // },
   {
     path: '/galeriaabm',
     component: GaleriaAbm,
