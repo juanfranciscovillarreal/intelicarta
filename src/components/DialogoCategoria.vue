@@ -67,7 +67,6 @@ import { useMenuStore } from "@/stores/menu";
 
 // Constants
 const emit = defineEmits(['dialogCategoriaCerrar'])
-const isEditing = ref(false);
 const dialogCategoria = ref(false);
 const formCategoria = ref(false);
 const DEFAULT_RECORD = ref({
@@ -80,14 +79,18 @@ const recordCategoria = ref({
 });
 const props = defineProps({
     show: Boolean,
-    titulo: {
-        type: String,
-        default: ''
-    },
-    mensaje: {
-        type: String,
-        default: ''
-    },
+    // titulo: {
+    //     type: String,
+    //     default: ''
+    // },
+    // mensaje: {
+    //     type: String,
+    //     default: ''
+    // },
+    esNueva:{
+        type: Boolean,
+        default: false        
+    }
 })
 
 const dialogShow = ref(false);
@@ -114,7 +117,7 @@ onMounted(() => {
 })
 
 function getDialogTitle(nombre) {
-    return isEditing.value ? `Editar ${nombre}` : `Agregar ${nombre}`;
+    return props.esNueva ? `Agregar ${nombre}` : `Editar ${nombre}`;
 }
 
 async function onSubmitCategoria() {
@@ -132,15 +135,15 @@ async function onSubmitCategoria() {
     }
 }
 
-function addCategoria() {
-    isEditing.value = false;
-    recordCategoria.value = { ...DEFAULT_RECORD.value };
-    dialogCategoria.value = true;
-}
+// function addCategoria() {
+//     props.esNueva = false;
+//     recordCategoria.value = { ...DEFAULT_RECORD.value };
+//     dialogCategoria.value = true;
+// }
 
 async function saveCategoria() {
     try {
-        if (isEditing.value) {
+        if (!props.esNueva) {
             await updateCategoria(recordCategoria);
         } else {
             let newItem = {

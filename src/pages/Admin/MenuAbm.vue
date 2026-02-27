@@ -2,7 +2,7 @@
   <v-container class="pa-0">
     <v-card elevation="0" rounded="0">
       <!-- <ToolBar titulo="Menú" ruta="/Administracion" :nuevo="true" @verDialogo="addCategoria()"></ToolBar> -->
-       <!-- Buscar -->
+      <!-- Buscar -->
       <v-row no-gutters>
         <v-col cols="12">
           <v-text-field v-model="filter" @keyup="filtrar" prepend-inner-icon="mdi-magnify" label="Buscar" single-line
@@ -80,7 +80,7 @@
     </v-card>
 
     <!-- Diálogo Categoría -->
-  <v-dialog v-model="dialogCategoria" transition="dialog-bottom-transition" max-width="800">
+    <!-- <v-dialog v-model="dialogCategoria" transition="dialog-bottom-transition" max-width="800">
     <v-form v-model="formCategoria" @submit.prevent="onSubmitCategoria">
       <v-card>
         <v-card-title class="bg-surface-light">
@@ -88,9 +88,7 @@
         </v-card-title>
 
         <v-card-text>
-          <!-- nombre -->
           <v-row no-gutters>
-            <!-- nombre -->
             <v-col cols="12" md="6">
               <v-text-field v-model="recordCategoria.nombre" :rules="[rules.required, rules.max50]" label="Nombre"
                 variant="underlined" clearable prepend-icon="mdi-tag-text">
@@ -108,7 +106,7 @@
         </v-card-actions>
       </v-card>
     </v-form>
-  </v-dialog>
+  </v-dialog> -->
 
     <!-- Diálogo Item -->
     <div class="text-center pa-4">
@@ -170,10 +168,15 @@
       @confirmarCerrar="confirmarShow = false" @confirmarAceptar="confirmarAceptar">
     </Confirm>
 
+    <DialogoCategoria 
+      :show="dialogoCategoriaShow" 
+      :esNueva="dialogoCategoriaNueva"
+      @dialogCategoriaCerrar="dialogoCategoriaShow = false">
+    </DialogoCategoria>
+
     <v-overlay persistent disabled :model-value="showOverlay" class="align-center justify-center">
       <v-progress-circular color="primary" size="48" indeterminate></v-progress-circular>
     </v-overlay>
-
 
   </v-container>
 </template>
@@ -185,6 +188,7 @@ import Dialog from "@/components/Dialog.vue";
 import ToolBar from "@/components/ToolBar.vue";
 import Confirm from "@/components/Confirm.vue";
 import Avatar from "@/components/Avatar.vue";
+import DialogoCategoria from "@/components/DialogoCategoria.vue";
 // Composables
 import { useErrorHandler } from "@/composables/errorHandler";
 import { useCategoria } from "@/composables/categorias";
@@ -233,6 +237,9 @@ const recordItem = ref({
   foto: "",
   precio: "",
 });
+
+const dialogoCategoriaShow = ref(false);
+const dialogoCategoriaNueva = ref(false);
 
 const dialogCategoria = ref(false);
 const dialogItem = ref(false);
@@ -346,11 +353,11 @@ async function onSubmitItem() {
   }
 }
 
-function addCategoria() {
-  isEditing.value = false;
-  recordCategoria.value = { ...DEFAULT_RECORD.value };
-  dialogCategoria.value = true;
-}
+// function addCategoria() {
+//   isEditing.value = false;
+//   recordCategoria.value = { ...DEFAULT_RECORD.value };
+//   dialogCategoria.value = true;
+// }
 
 function addItem(id_categoria) {
   isEditing.value = false;
@@ -360,10 +367,13 @@ function addItem(id_categoria) {
 }
 
 function editCategoria(id) {
+  debugger
   isEditing.value = true;
   const found = listaCategorias.value.find((categoria) => categoria.id === id);
   recordCategoria.value = { ...found };
-  dialogCategoria.value = true;
+  // dialogCategoria.value = true;
+  dialogoCategoriaShow.value = true;
+  dialogoCategoriaNueva.value = false;
 }
 
 function editItem(item) {
@@ -387,10 +397,11 @@ async function confirmarAceptar() {
     confirmarShow.value = false;
     showOverlay.value = true;
     await removeCategoria(recordCategoria.value.id);
-    categoriasStore.categorias = await getCategorias();
+    categoriasStore.categorias = await getCategorias(empresaStore.empresa.id);
     await getMenuData();
     showOverlay.value = false;
   } catch (error) {
+    showOverlay.value = false;
     dialogShow.value = true;
     dialogTitulo.value = "Categoría";
     dialogMensaje.value = useErrorHandler(error);

@@ -1,7 +1,7 @@
 <template>
   <v-card elevation="0" rounded="0">
     <v-layout>
-      <v-app-bar color="primary">
+      <v-app-bar color="primary" extension-height="12">
         <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title>Intelicarta</v-toolbar-title>
 
@@ -9,9 +9,18 @@
         <v-btn icon="mdi-filter" variant="text"></v-btn>
         <v-btn icon="mdi-dots-vertical" variant="text"></v-btn> -->
 
-        <v-spacer></v-spacer>
+        <template v-slot:extension>
+            <v-fab class="ms-4" 
+                    color="cyan-accent-2" 
+                    icon="mdi-plus" 
+                    location="bottom right" 
+                    size="40" 
+                    absolute offset
+                    @click="showDialogoCategoria(true)">
+          </v-fab>
+        </template>
 
-        <v-btn icon="mdi-plus" variant="text" @click="showDialogoCategoria()"></v-btn>
+        <v-spacer></v-spacer>
 
         <Usuario :nombre="empresaStore.empresa.nombre" :email="usuarioStore.email">
         </Usuario>
@@ -65,15 +74,13 @@
 
       <v-main>
         <router-view />
-        <!-- <FloatingButtons></FloatingButtons> -->
       </v-main>
 
     </v-layout>
 
     <DialogoCategoria 
-    :show="dialogoCategoriaShow" 
-    :titulo="dialogoCategoriaTitulo" 
-    :mensaje="dialogocategoriaMensaje"
+      :show="dialogoCategoriaShow" 
+      :esNueva="dialogoCategoriaNueva"
       @dialogCategoriaCerrar="dialogoCategoriaShow = false">
     </DialogoCategoria>
 
@@ -87,7 +94,6 @@ import { useRouter, useRoute } from 'vue-router'
 
 // Components
 import Usuario from "@/components/Usuario.vue";
-import FloatingButtons from '@/components/FloatingButtons.vue';
 import DialogoCategoria from "@/components/DialogoCategoria.vue";
 
 // Composables
@@ -126,8 +132,7 @@ const varios = ref([
 
 // Constants
 const dialogoCategoriaShow = ref(false);
-const dialogoCategoriaTitulo = ref("");
-const dialogocategoriaMensaje = ref("");
+const dialogoCategoriaNueva = ref(false);
 
 // Stores
 const authStore = useAuthStore();
@@ -142,10 +147,9 @@ watch(drawer, (newValue, oldValue) => {
   drawer.value = newValue
 })
 
-function showDialogoCategoria() {
+function showDialogoCategoria(esNueva) {
   dialogoCategoriaShow.value = true;
-  // dialogoCategoriaTitulo.value = "Título";
-  // dialogocategoriaMensaje.value = "Mensaje";
+  dialogoCategoriaNueva.value = esNueva;
 }
 
 function getImage() {
