@@ -9,8 +9,8 @@ export function useCategoria() {
   async function updateCategoria(record) {
     const { error } = await supabase
       .from('Categoria')
-      .update(record.value)
-      .eq('id', record.value.id);
+      .update(record)
+      .eq('id', record.id);
 
     if (error) throw error;
 

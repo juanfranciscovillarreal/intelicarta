@@ -1,7 +1,6 @@
 <template>
   <v-container class="pa-0">
     <v-card elevation="0" rounded="0">
-      <!-- <ToolBar titulo="Menú" ruta="/Administracion" :nuevo="true" @verDialogo="addCategoria()"></ToolBar> -->
       <!-- Buscar -->
       <v-row no-gutters>
         <v-col cols="12">
@@ -65,7 +64,7 @@
                               @click="editItem(item)"></v-icon>
 
                             <v-icon color="medium-emphasis" icon="mdi-delete" size="small"
-                              @click="deleteItem(item.id)"></v-icon>
+                              @click="deleteItem(item)"></v-icon>
                           </div>
                         </td>
                       </tr>
@@ -78,35 +77,6 @@
         </v-col>
       </v-row>
     </v-card>
-
-    <!-- Diálogo Categoría -->
-    <!-- <v-dialog v-model="dialogCategoria" transition="dialog-bottom-transition" max-width="800">
-    <v-form v-model="formCategoria" @submit.prevent="onSubmitCategoria">
-      <v-card>
-        <v-card-title class="bg-surface-light">
-          {{ getDialogTitle("Categoría") }}
-        </v-card-title>
-
-        <v-card-text>
-          <v-row no-gutters>
-            <v-col cols="12" md="6">
-              <v-text-field v-model="recordCategoria.nombre" :rules="[rules.required, rules.max50]" label="Nombre"
-                variant="underlined" clearable prepend-icon="mdi-tag-text">
-              </v-text-field>
-            </v-col>
-          </v-row>
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions class="bg-surface-light">
-          <v-btn text="Cancelar" variant="plain" @click="dialogCategoria = false"></v-btn>
-          <v-spacer></v-spacer>
-          <v-btn type="submit" text="Aceptar" color="primary"></v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-form>
-  </v-dialog> -->
 
     <!-- Diálogo Item -->
     <div class="text-center pa-4">
@@ -165,12 +135,17 @@
     </Dialog>
 
     <Confirm :show="confirmarShow" :titulo="confirmarTitulo" :mensaje="confirmarMensaje"
-      @confirmarCerrar="confirmarShow = false" @confirmarAceptar="confirmarAceptar">
+      @confirmarCerrar="confirmarShow = false" @confirmarAceptar="deleteCategoriaConfirma">
+    </Confirm>
+
+    <Confirm :show="confirmarItemShow" :titulo="confirmarTitulo" :mensaje="confirmarMensaje"
+      @confirmarCerrar="confirmarItemShow = false" @confirmarAceptar="deleteItemConfirma">
     </Confirm>
 
     <DialogoCategoria 
       :show="dialogoCategoriaShow" 
       :esNueva="dialogoCategoriaNueva"
+      :recordCategoria="recordCategoria" 
       @dialogCategoriaCerrar="dialogoCategoriaShow = false">
     </DialogoCategoria>
 
@@ -258,6 +233,7 @@ const filter = ref("");
 const listaMenu = ref([]);
 
 const confirmarShow = ref(false);
+const confirmarItemShow = ref(false);
 const confirmarTitulo = ref("");
 const confirmarMensaje = ref("");
 
@@ -325,20 +301,6 @@ function getDialogTitle(nombre) {
   return isEditing.value ? `Editar ${nombre}` : `Agregar ${nombre}`;
 }
 
-async function onSubmitCategoria() {
-  if (!formCategoria.value) return;
-
-  try {
-    showOverlay.value = true;
-    await saveCategoria();
-    showOverlay.value = false;
-  } catch (error) {
-    dialogShow.value = true;
-    dialogTitulo.value = "Categoría";
-    dialogMensaje.value = useErrorHandler(error);
-  }
-}
-
 async function onSubmitItem() {
   if (!formItem.value) return;
 
@@ -353,12 +315,6 @@ async function onSubmitItem() {
   }
 }
 
-// function addCategoria() {
-//   isEditing.value = false;
-//   recordCategoria.value = { ...DEFAULT_RECORD.value };
-//   dialogCategoria.value = true;
-// }
-
 function addItem(id_categoria) {
   isEditing.value = false;
   recordItem.value = { ...DEFAULT_RECORD_ITEM.value };
@@ -367,11 +323,9 @@ function addItem(id_categoria) {
 }
 
 function editCategoria(id) {
-  debugger
   isEditing.value = true;
   const found = listaCategorias.value.find((categoria) => categoria.id === id);
   recordCategoria.value = { ...found };
-  // dialogCategoria.value = true;
   dialogoCategoriaShow.value = true;
   dialogoCategoriaNueva.value = false;
 }
@@ -392,7 +346,7 @@ async function deleteCategoria(categoria) {
   confirmarShow.value = true;
 }
 
-async function confirmarAceptar() {
+async function deleteCategoriaConfirma() {
   try {
     confirmarShow.value = false;
     showOverlay.value = true;
@@ -408,50 +362,26 @@ async function confirmarAceptar() {
   }
 }
 
-/*
-async function deleteCategoria(id) {
-  try {
-    await removeCategoria(id);
-    categoriasStore.categorias = await getCategorias();
-    await getMenuData();
-  } catch (error) {
-    dialogShow.value = true;
-    dialogTitulo.value = "Categoría";
-    dialogMensaje.value = useErrorHandler(error);
-  }
+async function deleteItem(item) {
+  recordItem.value = { ...item };
+  confirmarMensaje.value = `¿Elimina el Item ${item.nombre}?`;
+  confirmarTitulo.value = "Eliminar";
+  confirmarItemShow.value = true;
 }
-  */
 
-async function deleteItem(id) {
-  try {
+async function deleteItemConfirma() {
+    try {
+    confirmarItemShow.value = false;
     showOverlay.value = true;
-    await removeItem(id);
-    categoriasStore.categorias = await getCategorias();
+    await removeItem(recordItem.value.id);
+    categoriasStore.categorias = await getCategorias(empresaStore.empresa.id);
     await getMenuData();
     showOverlay.value = false;
   } catch (error) {
+    showOverlay.value = false;
     dialogShow.value = true;
     dialogTitulo.value = "Item";
     dialogMensaje.value = useErrorHandler(error);
-  }
-}
-
-async function saveCategoria() {
-  try {
-    if (isEditing.value) {
-      await updateCategoria(recordCategoria);
-    } else {
-      let newItem = {
-        nombre: recordCategoria.value.nombre,
-      };
-      await insertCategoria(newItem);
-    }
-    categoriasStore.categorias = await getCategorias();
-    await getMenuData();
-    dialogCategoria.value = false;
-  } catch (error) {
-    dialogCategoria.value = false;
-    throw error;
   }
 }
 

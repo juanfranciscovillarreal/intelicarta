@@ -1,13 +1,5 @@
 <template>
     <div class="text-center pa-4">
-        <!-- <v-dialog v-model="props.show" width="auto">
-            <v-card max-width="400" :text="props.mensaje" :title="props.titulo">
-                <template v-slot:actions>
-                    <v-btn class="ms-auto" text="Aceptar" @click="$emit('dialogCerrar')"></v-btn>
-                </template>
-</v-card>
-</v-dialog> -->
-
         <!-- Diálogo Categoría -->
         <v-dialog v-model="props.show" transition="dialog-bottom-transition" max-width="800">
             <v-form v-model="formCategoria" @submit.prevent="onSubmitCategoria">
@@ -73,23 +65,15 @@ const DEFAULT_RECORD = ref({
   id: "",
   nombre: "",
 });
-const recordCategoria = ref({
-    id: "",
-    nombre: "",
-});
 const props = defineProps({
     show: Boolean,
-    // titulo: {
-    //     type: String,
-    //     default: ''
-    // },
-    // mensaje: {
-    //     type: String,
-    //     default: ''
-    // },
     esNueva:{
         type: Boolean,
         default: false        
+    },
+    recordCategoria: {
+        type: Object,
+        default: () => ({ id: '', nombre: '' }),
     }
 })
 
@@ -129,32 +113,28 @@ async function onSubmitCategoria() {
         showOverlay.value = false;
         emit('dialogCategoriaCerrar');
     } catch (error) {
+        showOverlay.value = false;
         dialogShow.value = true;
         dialogTitulo.value = "Categoría";
         dialogMensaje.value = useErrorHandler(error);
     }
 }
 
-// function addCategoria() {
-//     props.esNueva = false;
-//     recordCategoria.value = { ...DEFAULT_RECORD.value };
-//     dialogCategoria.value = true;
-// }
-
 async function saveCategoria() {
+    debugger
     try {
         if (!props.esNueva) {
-            await updateCategoria(recordCategoria);
+            await updateCategoria(props.recordCategoria);
         } else {
             let newItem = {
-                nombre: recordCategoria.value.nombre,
+                nombre: props.recordCategoria.value.nombre,
             };
             await insertCategoria(newItem);
         }       
         categoriasStore.categorias = await getCategorias(empresaStore.empresa.id);
         await getMenuData();
         dialogCategoria.value = false;
-        recordCategoria.value = { ...DEFAULT_RECORD.value };
+        props.recordCategoria.value = { ...DEFAULT_RECORD.value };
     } catch (error) {
         dialogCategoria.value = false;
         throw error;

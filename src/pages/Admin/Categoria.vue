@@ -184,6 +184,7 @@ async function confirmarAceptar() {
     menuStore.menu = await getMenu(empresaStore.empresa.id);
     showOverlay.value = false;
   } catch (error) {
+    showOverlay.value = false;
     dialogShow.value = true;
     dialogMensaje.value = useErrorHandler(error);
   }
@@ -214,6 +215,7 @@ async function onSubmit() {
     menuStore.menu = await getMenu(empresaStore.empresa.id);
     showOverlay.value = false;
   } catch (error) {
+    showOverlay.value = false;
     dialogShow.value = true;
     dialogMensaje.value = useErrorHandler(error);
   }
@@ -222,7 +224,7 @@ async function onSubmit() {
 async function save() {
   try {
     if (isEditing.value) {
-      await updateCategoria(record);
+      await updateCategoria(record.value);
     } else {
       let newCategoria = {
         nombre: record.value.nombre,
