@@ -74,6 +74,7 @@ export default defineConfig({
       vueTemplate: true,
     }),
   ],
+  base:'./',
   optimizeDeps: {
     exclude: [
       'vuetify',
