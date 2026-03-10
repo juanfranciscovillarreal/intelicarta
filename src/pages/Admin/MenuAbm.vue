@@ -4,17 +4,33 @@
       <!-- Buscar -->
       <v-row no-gutters>
         <v-col cols="12">
-          <v-text-field v-model="filter" @keyup="filtrar" prepend-inner-icon="mdi-magnify" label="Buscar" single-line
-            hide-details clearable @click:clear="listar">
-          </v-text-field>
+          <v-card flat>
+            <template v-slot:text>
+                <v-text-field 
+                  v-model="search" 
+                  label="Buscar" 
+                  prepend-inner-icon="mdi-magnify" 
+                  single-line
+                  hide-details
+                  clearable>
+                </v-text-field>
+            </template>
+          </v-card>
         </v-col>
       </v-row>
 
       <!-- Menú -->
       <v-row no-gutters>
         <v-col cols="12">
-          <v-data-table :headers="categoriasHeaders" :items="listaMenu" item-value="id" show-expand hide-default-footer
-            hide-default-header :loading="loadingMenu">
+          <v-data-table 
+            :headers="categoriasHeaders" 
+            :items="listaMenu" 
+            item-value="id" 
+            show-expand hide-default-footer
+            hide-default-header 
+            :loading="loadingMenu"
+            :search="search">
+
             <template v-slot:loading>
               <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
             </template>
@@ -24,28 +40,51 @@
               internalItem,
               isExpanded,
               toggleExpand,
-            }">
-              <div class="d-flex ga-2 justify-end">
+            }">       
+              <v-card-actions>
                 <v-icon color="medium-emphasis" icon="mdi-pencil" size="small"
-                  @click="editCategoria(internalItem.value)"></v-icon>
+                    @click="editCategoria(internalItem.value)">
+                </v-icon>
 
-                <v-icon color="medium-emphasis" icon="mdi-delete" size="small"
-                  @click="deleteCategoria(internalItem)"></v-icon>
+                  <v-icon color="medium-emphasis" icon="mdi-delete" size="small"
+                    @click="deleteCategoria(internalItem)">
+                </v-icon>
 
-                <v-icon color="medium-emphasis" icon="mdi-plus" size="small"
-                  @click="addItem(internalItem.value)"></v-icon>
+                <v-spacer></v-spacer>
 
                 <v-btn :icon="isExpanded(internalItem)
                   ? 'mdi-chevron-up'
                   : 'mdi-chevron-down'
                   " color="medium-emphasis" density="comfortable" size="small" variant="outlined"
                   @click="toggleExpand(internalItem)">
-                </v-btn>
-              </div>
+                </v-btn>   
+
+              </v-card-actions>
+
             </template>
 
             <!-- Items -->
             <template v-slot:expanded-row="{ columns, item }">
+              <!-- Items Header-->
+              <tr>
+                <td :colspan="columns.length" class="pl-2">
+                  <v-table density="compact">
+                    <tbody>
+                      <tr style="background-color: lightgrey;">
+                        <td>Imagen</td>
+                        <td>Nombre</td>
+                        <td>Precio</td>
+                        <td class="text-end">
+                          <v-icon color="medium-emphasis" icon="mdi-plus-circle" size="small"
+                          @click="addItem(item.id)"></v-icon>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </td>
+              </tr>
+
+              <!-- Items data -->
               <tr>
                 <td :colspan="columns.length" class="pl-2">
                   <v-table density="compact">
@@ -73,6 +112,7 @@
                 </td>
               </tr>
             </template>
+
           </v-data-table>
         </v-col>
       </v-row>
@@ -220,16 +260,17 @@ const dialogCategoria = ref(false);
 const dialogItem = ref(false);
 const isEditing = ref(false);
 const categoriasHeaders = ref([
-  { title: "Categoría", key: "nombre" },
+{ title: "Categoría", key: "nombre" },  
   {
     title: "",
     key: "actions",
-    align: "end",
+    //align: "end",
     sortable: false,
     class: "my-header-style",
-  },
+  }, 
 ]);
 const filter = ref("");
+const search = ref("")
 const listaMenu = ref([]);
 
 const confirmarShow = ref(false);
@@ -278,23 +319,8 @@ watch(
   { deep: true }
 );
 
-function listar() {
-  listaMenu.value = menu.value;
-}
-
-function filtrar() {
-  let filtro = filter.value.toLowerCase();
-  listaMenu.value = menu.value;
-
-  let menuFiltrado = listaMenu.value.filter((item) =>
-    item.nombre.toLowerCase().includes(filtro)
-  );
-
-  if (filtro != "") listaMenu.value = menuFiltrado;
-}
-
 function updateAvatar(avatar) {
-  recordItem.value.imageUrl = avatar;
+  recordItem.value.foto = avatar;
 }
 
 function getDialogTitle(nombre) {
@@ -309,6 +335,7 @@ async function onSubmitItem() {
     await saveItem();
     showOverlay.value = false;
   } catch (error) {
+    showOverlay.value = false;
     dialogShow.value = true;
     dialogTitulo.value = "Item";
     dialogMensaje.value = useErrorHandler(error);

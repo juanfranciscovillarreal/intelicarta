@@ -1,7 +1,7 @@
 <template>
     <div class="text-center pa-4">
         <!-- Diálogo Categoría -->
-        <v-dialog v-model="props.show" transition="dialog-bottom-transition" max-width="800">
+        <!-- <v-dialog v-model="props.show" transition="dialog-bottom-transition" max-width="800">
             <v-form v-model="formCategoria" @submit.prevent="onSubmitCategoria">
                 <v-card>
                     <v-card-title class="bg-surface-light">
@@ -9,9 +9,7 @@
                     </v-card-title>
 
                     <v-card-text>
-                        <!-- nombre -->
                         <v-row no-gutters>
-                            <!-- nombre -->
                             <v-col cols="12">
                                 <v-text-field v-model="recordCategoria.nombre" :rules="[rules.required, rules.max50]"
                                     label="Nombre" variant="underlined" clearable prepend-icon="mdi-tag-text">
@@ -29,6 +27,46 @@
                     </v-card-actions>
                 </v-card>
             </v-form>
+        </v-dialog> -->
+
+        <v-dialog v-model="props.show" transition="dialog-bottom-transition" fullscreen>
+         
+            <v-card>
+                <v-form v-model="formCategoria" @submit.prevent="onSubmitCategoria">
+                    <v-toolbar>
+                        <v-btn icon="mdi-close" @click="$emit('dialogCategoriaCerrar')"></v-btn>
+
+                        <v-toolbar-title>{{ getDialogTitle("categoría") }}</v-toolbar-title>
+
+                        <v-toolbar-items>
+                            <v-btn type="submit" text="Aceptar" variant="text"></v-btn>
+                        </v-toolbar-items>
+                    </v-toolbar>
+
+                    <v-card-text>
+                        <!-- Avatar -->
+                        <v-row no-gutters>
+                            <v-col cols="12">
+                                <Avatar :avatar="recordCategoria.foto" @onUpdateAvatar="updateAvatar"></Avatar>
+                            </v-col>
+                        </v-row>     
+                        <!--Nombre-->                  
+                        <v-row no-gutters>
+                            <v-col cols="12">
+                                <v-text-field 
+                                    v-model="recordCategoria.nombre" 
+                                    :rules="[rules.required, rules.max50]"
+                                    label="Nombre" 
+                                    variant="underlined" 
+                                    clearable 
+                                    prepend-icon="mdi-tag-text">
+                                </v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+
+                </v-form>                
+            </v-card>        
         </v-dialog>
 
         <Dialog :show="dialogShow" :titulo="dialogTitulo" :mensaje="dialogMensaje" @dialogCerrar="dialogShow = false">
@@ -42,7 +80,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, shallowRef } from 'vue';
 
 // Composables
 import { useReglas } from "@/composables/reglas";
@@ -57,14 +95,14 @@ import { useItemsStore } from "@/stores/items";
 import { useEmpresaStore } from "@/stores/empresa";
 import { useMenuStore } from "@/stores/menu";
 
+// Assets
+import imgUrl from '@/assets/image.png';
+
 // Constants
 const emit = defineEmits(['dialogCategoriaCerrar'])
 const dialogCategoria = ref(false);
 const formCategoria = ref(false);
-const DEFAULT_RECORD = ref({
-  id: "",
-  nombre: "",
-});
+const DEFAULT_RECORD = ref({id: '', nombre: '', foto:''});
 const props = defineProps({
     show: Boolean,
     esNueva:{
@@ -73,13 +111,18 @@ const props = defineProps({
     },
     recordCategoria: {
         type: Object,
-        default: () => ({ id: '', nombre: '' }),
+        default: () => ({ id: '', nombre: '', foto: imgUrl }),
     }
 })
 
 const dialogShow = ref(false);
 const dialogTitulo = ref("");
 const dialogMensaje = ref("");
+
+// const dialog = shallowRef(false)
+// const notifications = shallowRef(false)
+// const sound = shallowRef(true)
+// const widgets = shallowRef(false)
 
 const showOverlay = ref(false);
 const loadingMenu = ref(false);
@@ -97,11 +140,11 @@ const empresaStore = useEmpresaStore();
 const menuStore = useMenuStore();
 
 onMounted(() => {
-
+    console.log(props.esNueva ?'es nueva':'es edición')
 })
 
 function getDialogTitle(nombre) {
-    return props.esNueva ? `Agregar ${nombre}` : `Editar ${nombre}`;
+    return props.esNueva ? `Nueva ${nombre}` : `Editar ${nombre}`;
 }
 
 async function onSubmitCategoria() {
@@ -121,13 +164,13 @@ async function onSubmitCategoria() {
 }
 
 async function saveCategoria() {
-    debugger
     try {
         if (!props.esNueva) {
             await updateCategoria(props.recordCategoria);
         } else {
             let newItem = {
-                nombre: props.recordCategoria.value.nombre,
+                nombre: props.recordCategoria.nombre,
+                foto: props.recordCategoria.foto
             };
             await insertCategoria(newItem);
         }       
@@ -145,6 +188,10 @@ async function saveCategoria() {
         menuStore.menu = await getMenu(empresaStore.empresa.id);
         loadingMenu.value = false;
     }
+}
+
+function updateAvatar(avatar) {
+  props.recordCategoria.foto = avatar;
 }
 
 </script>
